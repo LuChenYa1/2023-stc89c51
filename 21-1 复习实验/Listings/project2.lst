@@ -1,0 +1,93 @@
+A51 MACRO ASSEMBLER  PROJECT2                                                             10/17/2023 19:20:44 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.2.7.0
+OBJECT MODULE PLACED IN .\Objects\project2.obj
+ASSEMBLER INVOKED BY: D:\Keil_v5\C51\BIN\A51.EXE project2.asm SET(SMALL) DEBUG PRINT(.\Listings\project2.lst) OBJECT(.\O
+                      bjects\project2.obj) EP
+
+LOC  OBJ            LINE     SOURCE
+
+                       1                             ;ORG  0000H
+                       2                             ;AJMP MAIN
+                       3                             ;ORG  0100H
+                       4     
+                       5     ;;Ö÷³ÌÐò²¿·Ö
+                       6     ;MAIN:       ;Ò»¡¢ÏÈ¸øÆ¬ÄÚRAM50H~5AHËæ»ú¸³Öµ
+                       7                             ;MOV   50H, #56H
+                       8                             ;MOV   51H, #14H
+                       9                             ;MOV   52H, #25H
+                      10                             ;MOV   53H, #78H
+                      11                             ;MOV   54H, #37H
+                      12                             ;MOV   55H, #89H
+                      13                             ;MOV   56H, #52H
+                      14                             ;MOV   57H, #04H
+                      15                             ;MOV   58H, #44H
+                      16                             ;MOV   59H, #29H
+                      17                             ;MOV   5AH, #67H
+                      18                             
+                      19                             ;;¶þ¡¢³õÊ¼»¯
+                      20                             ;MOV   R0, #50H;³õÊ¼µØÖ·
+                      21                             ;MOV   R6, #09H;ÍâÑ­»·¿ØÖÆ´ÎÊ
+                      22                             ;MOV   R7, #09H;ÄÚÑ­»·¿ØÖÆ´ÎÊ
+                      23                             
+                      24     ;LOOP1:     ACALL _PaiXu
+                      25                             ;DJNZ  R6, LOOP1
+                      26                             ;SJMP  $
+                      27                             ;END
+                      28                             
+                      29     ;;×Ó³ÌÐò²¿·Ö                            
+                      30     ;_PaiXu:     PUSH  ACC
+                      31                             ;PUSH  PSW
+                      32                             ;PUSH  R0
+                      33                             ;PUSH  R1
+                      34                             ;MOV   PSW, #08H
+                      35                             
+                      36     ;LOOP2:         MOV   A, @R0
+                      37                             ;INC   R0
+                      38                             ;CJNE  A, @R0, Exchange
+                      39     ;B1:            DJNZ  R7, LOOP2  
+                      40                             
+                      41                 ;POP   R0
+                      42                             ;POP   ACC
+                      43                             ;POP   PSW
+                      44                             ;POP   R1
+                      45                             ;RET
+                      46                             
+                      47     ;Exchange:      JNB   PSW.7, B1
+                      48                             ;ACALL _HuHuan
+                      49                             ;SJMP  B1
+                      50                             
+                      51                             
+                      52     ;_HuHuan:    ;°ÑÏàÁÚÁ½¸öµØÖ·µÄÖµ»¥»»
+                      53                             ;PUSH  R0
+                      54                             ;PUSH  ACC
+                      55                             ;PUSH  PSW
+                      56                             ;MOV   PSW, #08H
+                      57                             ;XCH   A, @R0
+A51 MACRO ASSEMBLER  PROJECT2                                                             10/17/2023 19:20:44 PAGE     2
+
+                      58                             ;DEC   R0
+                      59                             ;MOV   @R0, A
+                      60                             ;POP   R0
+                      61                             ;POP   ACC
+                      62                             ;POP   PSW
+                      63                             ;RET
+                      64                                             
+                      65     
+                      66                             
+*** WARNING #A41 IN 66 (project2.asm, LINE 66): MISSING 'END' STATEMENT
+A51 MACRO ASSEMBLER  PROJECT2                                                             10/17/2023 19:20:44 PAGE     3
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  1 WARNING(S), 0 ERROR(S)

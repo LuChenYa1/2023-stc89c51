@@ -1,0 +1,41 @@
+C51 COMPILER V9.59.0.0   NIXIE                                                             11/04/2023 21:17:42 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE NIXIE
+OBJECT MODULE PLACED IN .\Objects\nixie.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE nixie.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\nix
+                    -ie.lst) OBJECT(.\Objects\nixie.obj)
+
+line level    source
+
+   1          #include <REGX51.H>
+   2          #include "delay.h"
+   3          unsigned char xianshi[]={0xC0,0xF9,0xA4,0xB0,0x99,0x92,0x82,0xF8,
+   4                                                           0x80,0x90,0x88,0x83,0xC6,0xA1,0x86,0x8E,
+   5                                                           0xFF};
+   6          void nixie(unsigned char location,number)
+   7          {
+   8   1                      switch( location)
+   9   1                      {
+  10   2                              case 1:P1_0 = 1;P1_1 = 0;break;//位选
+  11   2                              case 2:P1_0 = 0;P1_1 = 1;break;
+  12   2                      }
+  13   1                      P0=xianshi[number];                //段选
+  14   1                      delay_ms(1);                       //消影，使上下两位数字显示留有时间间隔
+  15   1                                               
+  16   1                      P0 = 0xFF;                                                      //防止对下一次显示造成影响
+  17   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     36    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     17    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

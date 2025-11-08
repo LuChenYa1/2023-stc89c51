@@ -1,0 +1,98 @@
+C51 COMPILER V9.59.0.0   UART                                                              05/16/2023 22:01:08 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE UART
+OBJECT MODULE PLACED IN .\Objects\UART.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE UART.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\UART
+                    -.lst) OBJECT(.\Objects\UART.obj)
+
+line level    source
+
+   1          #include <REGX51.H>
+   2          
+   3          typedef  unsigned char uchar;
+   4          
+   5          
+   6          /**
+   7            * @brief  ÉèÖÃ´®¿Ú½ÓÊÕÄ£Ê½£¬Ò²ÄÜ·¢ËÍ
+   8            * @param  ÎÞ
+   9            * @retval ÎÞ
+  10            */
+  11          void UART_Init(void)      //9600bps@11.0592MHz
+  12          {
+  13   1                                    //0x50±È0x40¶àÁËREN=1,ÔÊÐí½ÓÊÕÊý¾Ý
+  14   1              SCON = 0x50;          //´®¿ÚÄ£Ê½1£¨³£ÓÃ£©£¬°ËÎ»Êý¾Ý£¬¿É±ä²¨ÌØÂÊ£¬ºÍ¶¨Ê±Æ÷Ä£Ê½2£¨°ËÎ»×Ô¶¯ÖØ×°£©²»ÊÇÒ»¸ö¶«Î
+             -÷
+  15   1              PCON |=0x80;          //×î¸ßÎ»ÖÃÒ»£¬ÆäËûÎ»²»±ä£¬²¨ÌØÂÊ¼Ó±¶£¨±¾À´ÊÇÎªÁË¼õÐ¡Îó²î£¬µ«ÕâÀïÒÑ¾­ÎÞÎó²î£¬¿É²»¼Ó±
+             -¶£©
+  16   1              //      AUXR &= 0xBF;     //¸ß¼¶¹¦ÄÜ£¬¸ÃÐÍºÅµ¥Æ¬»úÃ»ÓÐ  
+  17   1              //      AUXR &= 0xFE;     //µ÷12TºÍ¶¨Ê±Æ÷1
+  18   1              TMOD &=0x0F;          //¸ßËÄÎ»ÇåÁã£¬µÍËÄÎ»²»±ä£¬µ÷¶¨Ê±Æ÷1
+  19   1          TMOD |=0x20;          //µ÷¶¨Ê±Æ÷1µÄÄ£Ê½¶þ£¬°ËÎ»×Ô¶¯ÖØ×°Ä£Ê½
+  20   1              TL1=0xFA;             //ÉèÖÃ¶¨Ê±³õÖµ
+  21   1              TH1=0xFA;             //Éè¶¨¶¨Ê±Æ÷ÖØ×°Öµ
+  22   1              ET1=0;                //½ûÖ¹¶¨Ê±Æ÷1ÖÐ¶Ï£¬Ö»Ìá¹©¶¨Ê±¹¦ÄÜ£¬ÖÐ¶ÏÃ»ÓÐÓÃ
+  23   1              TR1=1;                //Æô¶¯¶¨Ê±Æ÷
+  24   1              //¶ÀÊôÓÚÐèÒª½ÓÊÜÊý¾ÝµÄÊ±ºòµÄÅäÖÃ
+  25   1              EA=1;                 //¿ªÆôÖÐ¶Ï×Ü¿ª¹Ø
+  26   1              ES=1;                 //¿ªÆô´®¿ÚÖÐ¶Ï
+  27   1      }
+  28          //¶¨Ê±Æ÷1ÖÐ¶ÏµÄ´¥·¢Ìõ¼þÊÇÊ±¼äµ½ÁË£¬¶¨Ê±½áÊø£¬¶¨Ê±Æ÷1ÓÃÀ´ÅäÖÃ²¨ÌØÂÊ£¬Ã»ÓÐ±ØÒª¿ªÆôÖÐ¶Ï
+  29          //´®¿ÚÖÐ¶ÏµÄ´¥·¢Ìõ¼þÊÇ½ÓÊÕÊý¾Ý»òÕß·¢ËÍÊý¾Ý
+  30          
+  31          
+  32          
+  33          /**
+  34            * @brief  ÓÉ´®¿ÚÏòµçÄÔ·¢ËÍÒ»¸öÊý×Ö
+  35            * @param  Êý×Ö×Ö·û
+  36            * @retval ÎÞ
+  37            */
+  38          void UART_SendByte(uchar byte)
+  39          {
+  40   1              SBUF=byte;                    //SBUFÓÐÁ½¸ö£¬Ò»¸öÊÇ·¢ËÍÇø£¬Ò»¸öÊÇ½ÓÊÜÇø£¬¿Õ¼ä²»Ò»Ñù£¬µ«Õ¼ÓÃÍ¬Ò»¸öµØÖ·
+  41   1              while(TI==0);
+  42   1              TI=0;                         //Ò»µ©·¢ËÍ£¬Á¢¼´Èí¼þ¸´Î»
+  43   1      }
+  44          
+  45          void Uart_SendString(unsigned char *String)
+  46          {
+  47   1              unsigned char i = 0;
+  48   1              ES=0;
+  49   1              for(i = 0;String[i]!='\0';i++)
+  50   1              {
+  51   2                      SBUF=String[i]; 
+  52   2                      while(TI==0); 
+C51 COMPILER V9.59.0.0   UART                                                              05/16/2023 22:01:08 PAGE 2   
+
+  53   2                      TI=0; 
+  54   2              }
+  55   1              ES=1;
+  56   1      }
+  57          
+  58           /**
+  59            * @brief  ´®¿ÚÖÐ¶Ïº¯ÊýÄ£°å
+  60            * @param  ÎÞ
+  61            * @retval ÎÞ
+  62            */
+  63          //void UART_Routine()   interrupt 4 //´®¿ÚÖÐ¶Ï¶ÔÓ¦ÖÐ¶ÏºÅ
+  64          //{
+  65          //      if(RI==1)                     //·¢ËÍºÍ½ÓÊÕÖÐ¶ÏÕ¼ÓÃµÄÊÇÒ»¸öÍ¨µÀ£¬¶¼»á´¥·¢ÖÐ¶Ïº¯Êý£¬¼ÓifÅÐ¶Ï·ÀÖ¹Îó´¥
+  66          //      {
+  67          //              RI=0;                     //£¨ÊÖ¶¯£©Èí¼þ¸´Î»
+  68          //      }
+  69          //}
+  70          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     74    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       3
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

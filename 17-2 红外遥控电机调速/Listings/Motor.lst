@@ -1,0 +1,59 @@
+C51 COMPILER V9.59.0.0   MOTOR                                                             04/26/2023 15:52:57 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE MOTOR
+OBJECT MODULE PLACED IN .\Objects\Motor.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE Motor.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\Mot
+                    -or.lst) OBJECT(.\Objects\Motor.obj)
+
+line level    source
+
+   1          #include <REGX51.H>
+   2          #include "Timer1_Init.h"
+   3          
+   4          sbit Motor = P1^0;       //PWM（DAC）运行口，1工作
+   5          unsigned char Compare;
+   6          
+   7          
+   8          void Motor_Init(void)
+   9          {
+  10   1              Timer1_Init();
+  11   1      }
+  12          
+  13          
+  14          void Motor_SetSpeed(unsigned char Speed)
+  15          {
+  16   1              Compare=Speed;
+  17   1      }
+  18          void Timer1_Routine () interrupt 1
+  19          {
+  20   1              static unsigned int T1count;     //静态局部变量，保证不会被重新赋值
+  21   1      
+  22   1              TL1 = 0xA4;                                      //确保中断时间不变,每隔100us进来一次
+  23   1              TH1 = 0xFF;     
+  24   1              T1count++;
+  25   1              T1count%=100;                    //100us*10为一周期
+  26   1              if(T1count<Compare)              //小于比较值时置高电平
+  27   1              {
+  28   2                      Motor=1;//电机高电平转
+  29   2              }
+  30   1              else                             //大于比较值时置低电平
+  31   1              {
+  32   2                      Motor=0;//电机低电平不转
+  33   2              }
+  34   1      }
+  35          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     87    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      3    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

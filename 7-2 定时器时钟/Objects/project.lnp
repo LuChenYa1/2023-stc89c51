@@ -1,0 +1,5 @@
+".\Objects\main.obj",
+".\Objects\LCD1602.obj",
+".\Objects\Timer0_Init.obj" 
+TO ".\Objects\project" 
+PRINT(".\Listings\project.m51") DISABLEWARNING (16) 

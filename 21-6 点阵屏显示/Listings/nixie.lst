@@ -1,0 +1,82 @@
+C51 COMPILER V9.59.0.0   NIXIE                                                             12/09/2023 10:15:37 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE NIXIE
+OBJECT MODULE PLACED IN .\Objects\nixie.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE nixie.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\nix
+                    -ie.lst) OBJECT(.\Objects\nixie.obj)
+
+line level    source
+
+   1          #include <REGX51.H>
+   2          #include "delay.h"
+   3          unsigned char xianshi[]={0x3f,0x06,0x5b,0x4f,0x66,0x6d,0x7d,0x07,0x7f,0x6f,0x77,0x7c,0x39,0x5e,0x79,0x71,0
+             -x00, 0x40};
+   4          unsigned char nixie_Buf[9]={0,18,18,18,18,18,18,18,18};//显示数字缓存区（数组套数组）
+   5          
+   6          
+   7          /**
+   8            * @brief  
+   9            * @param  
+  10            * @retval 
+  11            */
+  12          void nixie(unsigned char location,number)
+  13          {
+  14   1              nixie_Buf[location] = number;
+  15   1      }
+  16          
+  17          
+  18          /**
+  19            * @brief  从左到右，对应87654321，显示指定的数字
+  20            * @param  location，数字显示的位置
+  21            * @param  number，  要显示的数字
+  22            * @retval 无
+  23            */
+  24          void nixie_xianshi(unsigned char location,number)
+  25          {
+  26   1              P2 = 0x00;
+  27   1              switch(location)
+  28   1              {
+  29   2                      case 8:P2_5=1;P2_6=1;P2_7=1;break;//从左到右，对应87654321
+  30   2                      case 7:P2_5=1;P2_6=1;P2_7=0;break;
+  31   2                      case 6:P2_5=1;P2_6=0;P2_7=1;break;
+  32   2                      case 5:P2_5=1;P2_6=0;P2_7=0;break;
+  33   2                      case 4:P2_5=0;P2_6=1;P2_7=1;break;
+  34   2                      case 3:P2_5=0;P2_6=1;P2_7=0;break;
+  35   2                      case 2:P2_5=0;P2_6=0;P2_7=1;break;
+  36   2                      case 1:P2_5=0;P2_6=0;P2_7=0;break;
+  37   2              }
+  38   1              P0 = xianshi[number];
+  39   1      }
+  40          
+  41          /**
+  42            * @brief  
+  43            * @param  
+  44            * @retval 
+  45            */
+  46          void nixie_Loop(void)
+  47          {
+  48   1              static unsigned char i = 1;
+  49   1      
+  50   1              nixie_xianshi(i,nixie_Buf[i]);
+  51   1              i++;
+  52   1              if(i == 9)i = 1;
+  53   1      }
+C51 COMPILER V9.59.0.0   NIXIE                                                             12/09/2023 10:15:37 PAGE 2   
+
+  54          
+  55          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    137    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     28    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

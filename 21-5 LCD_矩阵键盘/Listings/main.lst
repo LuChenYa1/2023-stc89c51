@@ -1,0 +1,380 @@
+C51 COMPILER V9.59.0.0   MAIN                                                              12/03/2023 14:39:33 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\main
+                    -.lst) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include <REGF51RC.H>
+   2          #include "Matrixkey.h"
+   3          #include "delay.h"
+   4          #include "Timer0_Init.h"
+   5          #include "LCD1602.h"
+   6          
+   7          #define Start 1
+   8          #define Stop  0
+   9          #define uint8_t  unsigned char 
+  10                  
+  11          uint8_t MatrixKeyNum, Mode, Time_Mode = 0, Count, Flag_Act;
+  12          uint8_t State = 0, h = 23, f = 59, s = 56, i0;
+  13          
+  14          //char code name[16] = {"Zhong Qian Hui "};
+  15          char i1 = 1, i2 = 2, i3 = 3, i4 = 4, i5 = 5, i6 = 6, i7 = 7, i8 = 8, i9 = 9, i10 = 10, i11 = 11, i12 = 12,
+             - i13 = 13, i14 = 14, i15 = 15, i16 = 16;
+  16          
+  17          char code name[14][16] = {{"Zhong Qian Hui "}, {"hong Qian Hui Z"}, {"ong Qian Hui Zh"}, {"ng Qian Hui Zho
+             -"}, {"g Qian Hui Zhon"}
+  18                                          , {" Qian Hui Zhong"}, {"Qian Hui Zhong "}, {"ian Hui Zhong Q"}, {"an Hui Zhong Qi"}, {"n Hui Zhong Qi
+             -a"}, 
+  19                                                  {" Hui Zhong Qian"}, {"ui Zhong Qian H"}, {"i Zhong Qian Hu"}, {" Zhong Qian Hui"}};
+  20          
+  21          void Show_Name(void);
+  22          void Show_Time(void);
+  23          void Show_TimeAct(void);                                
+  24          void Get_Mode(void);
+  25          void TimeSet(uint8_t  *TimeKind, Value);
+  26          void Show_Second(void);
+  27          void Show_Minute(void);
+  28          void Show_Hour(void);
+  29          //void Show_NameAct(void);
+  30          
+  31          void main ()
+  32          {
+  33   1      //      nixie(8, 16);//硬件bug消除
+  34   1              Timer0_Init();
+  35   1              LCD_Init();
+  36   1              LCD_ShowString(1, 1, "Zhong Qian Hui");
+  37   1          while(1)
+  38   1              {
+  39   2                      Get_Mode();//得到按键对应模式
+  40   2                      Show_Time();
+  41   2                      if(MatrixKeyNum == 15)Flag_Act = !Flag_Act;
+  42   2      //              if(Flag_Act == 0)Show_Name();//静态显示名字
+  43   2      //              else if(Flag_Act == 1)Show_NameAct();//动态显示名字
+  44   2                      if(Flag_Act == 0)Show_Time();//静态显示时间
+  45   2                      else if(Flag_Act == 1)Show_TimeAct();//动态显示时间
+  46   2                      
+  47   2                      if(MatrixKeyNum == 10)State = !State;//按下一瞬间控制启停
+  48   2                      if(State == Stop)//进入暂停模式
+  49   2                      {
+  50   3                              if(MatrixKeyNum == 14)//选择要设置时间的位
+  51   3                              {
+C51 COMPILER V9.59.0.0   MAIN                                                              12/03/2023 14:39:33 PAGE 2   
+
+  52   4                                      Time_Mode ++;
+  53   4                                      if(Time_Mode == 7)Time_Mode = 1;
+  54   4                              }
+  55   3                              //以下语句不能放在上面的if判断中，因为当时的Mode = 10,不满足条件，无法设置时间
+  56   3                              if(Time_Mode == 1 || Time_Mode == 2)//设置时
+  57   3                              {
+  58   4                                      if(Mode < 10)TimeSet(&h, Mode); 
+  59   4                              }
+  60   3                              else if(Time_Mode == 3 || Time_Mode == 4)//设置分
+  61   3                              {
+  62   4                                      if(Mode < 10)TimeSet(&f, Mode);
+  63   4                              }
+  64   3                              else if(Time_Mode == 5 || Time_Mode == 6)//设置秒
+  65   3                              {
+  66   4                                      if(Mode < 10)TimeSet(&s, Mode);
+  67   4                              }
+  68   3                              //判断时间是否越界
+  69   3                              if(h > 23)
+  70   3                              {
+  71   4                                      h = 0; Mode = 0;//特例：刷新键值，防止小时的个位显示原来的值
+  72   4                              }
+  73   3                              if(f >= 60)f = 0;
+  74   3                              if(s >= 60)s = 0;
+  75   3                      }
+  76   2                      
+  77   2              }
+  78   1      }
+  79          
+  80          
+  81          //根据数字按键设置时间
+  82          void TimeSet(uint8_t  *TimeKind, Value)
+  83          {
+  84   1              if(Time_Mode == 1 || Time_Mode == 3 || Time_Mode == 5)*TimeKind = *TimeKind % 10 + Value * 10;
+  85   1              else if(Time_Mode == 2 || Time_Mode == 4 || Time_Mode == 6)*TimeKind = *TimeKind / 10 *10 + Value;
+  86   1      }
+  87          
+  88          
+  89          //定时中断
+  90          void Timer0_Routine () interrupt 1
+  91          {
+  92   1              static unsigned int T0count1, T0count2, T0count3;     //静态局部变量，保证不会被重新赋值
+  93   1      
+  94   1              TL0 = 0x66;                                       //确保中断时间不变
+  95   1              TH0 = 0xFC;     
+  96   1              T0count1++;
+  97   1              if(T0count1 == 700)               //每隔1秒进入if，灯亮灭变化
+  98   1              {
+  99   2                      T0count1 = 0;                 //这一句不小心被删掉了，导致浪费时间找bug
+ 100   2                      if(State == Start)
+ 101   2                      {
+ 102   3                              if(Mode == 11)//顺计时
+ 103   3                              {
+ 104   4                                      s ++;
+ 105   4                                      if(s == 60)
+ 106   4                                      {
+ 107   5                                              s = 0;
+ 108   5                                              f ++;
+ 109   5                                              if(f == 60)
+ 110   5                                              {
+ 111   6                                                      f = 0;
+ 112   6                                                      h ++;
+ 113   6                                                      if(h == 24) h = 0;
+C51 COMPILER V9.59.0.0   MAIN                                                              12/03/2023 14:39:33 PAGE 3   
+
+ 114   6                                              }
+ 115   5                                      }
+ 116   4                              }
+ 117   3                              else if(Mode == 12)//倒计时
+ 118   3                              {
+ 119   4                                      s--;
+ 120   4                                      if(s == 255)
+ 121   4                                      {
+ 122   5                                              s = 59;
+ 123   5                                              f--;
+ 124   5                                              if(f == 255)
+ 125   5                                              {
+ 126   6                                                      f = 59;
+ 127   6                                                      h--;
+ 128   6                                                      if(h == 255)h = 23;
+ 129   6                                              }
+ 130   5                                      }                               
+ 131   4                              }
+ 132   3                              else if(Mode == 13)//清零
+ 133   3                              {
+ 134   4                                      h = 0; f = 0; s = 0;
+ 135   4                              }
+ 136   3                      }
+ 137   2                      
+ 138   2              }
+ 139   1              T0count2 ++;
+ 140   1              if(T0count2 == 20)//定时器扫描矩阵键盘
+ 141   1              {
+ 142   2                      T0count2 = 0;
+ 143   2                      MatrixKey_Loop();
+ 144   2              }
+ 145   1              T0count3 ++;
+ 146   1              if(T0count3 == 700)
+ 147   1              {
+ 148   2                      T0count3 = 0;
+ 149   2      //              if(Flag_Act == 1)i0 ++;
+ 150   2      //              i0 %= 14;
+ 151   2                      i1--;i2--;i3--;i4--;i5--;i6--;i7--;i8--;i9--;i10--;i11--;i12--;i13--;i14--;i15--;i16--;
+ 152   2                      if(i1 == 0)i1 = 16;
+ 153   2                      if(i2 == 0)i2 = 16;
+ 154   2                      if(i3 == 0)i3 = 16;
+ 155   2                      if(i4 == 0)i4 = 16;
+ 156   2                      if(i5 == 0)i5 = 16;
+ 157   2                      if(i6 == 0)i6 = 16;
+ 158   2                      if(i7 == 0)i7 = 16;
+ 159   2                      if(i8 == 0)i8 = 16;
+ 160   2                      if(i9 == 0)i9 = 16;
+ 161   2                      if(i10 == 0)i10 = 16;
+ 162   2                      if(i11 == 0)i11 = 16;
+ 163   2                      if(i12 == 0)i12 = 16;
+ 164   2                      if(i13 == 0)i13 = 16;
+ 165   2                      if(i14 == 0)i14 = 16;
+ 166   2                      if(i15 == 0)i15 = 16;
+ 167   2                      if(i16 == 0)i16 = 16;
+ 168   2              }
+ 169   1      }
+ 170          
+ 171          
+ 172          //由按键得到模式，不被刷新为0
+ 173          void Get_Mode(void)
+ 174          {
+ 175   1              MatrixKeyNum = MatrixKey();
+C51 COMPILER V9.59.0.0   MAIN                                                              12/03/2023 14:39:33 PAGE 4   
+
+ 176   1              if(MatrixKeyNum == 1)Mode = 1;
+ 177   1              else if(MatrixKeyNum == 2)Mode = 2;
+ 178   1              else if(MatrixKeyNum == 3)Mode = 3;
+ 179   1              else if(MatrixKeyNum == 4)Mode = 4;
+ 180   1              else if(MatrixKeyNum == 5)Mode = 5;
+ 181   1              else if(MatrixKeyNum == 6)Mode = 6;
+ 182   1              else if(MatrixKeyNum == 7)Mode = 7;
+ 183   1              else if(MatrixKeyNum == 8)Mode = 8;
+ 184   1              else if(MatrixKeyNum == 9)Mode = 9;
+ 185   1              //else if(MatrixKeyNum == 10)Mode = 10;//该句不能加
+ 186   1              else if(MatrixKeyNum == 11)Mode = 11;
+ 187   1              else if(MatrixKeyNum == 12)Mode = 12;
+ 188   1              else if(MatrixKeyNum == 13)Mode = 13;
+ 189   1              else if(MatrixKeyNum == 14)Mode = 14;
+ 190   1              else if(MatrixKeyNum == 15)Mode = 15;
+ 191   1              else if(MatrixKeyNum == 16)Mode = 0;
+ 192   1      }
+ 193          
+ 194          
+ 195          void Show_Name(void)
+ 196          {
+ 197   1              LCD_ShowString(1, 1, "Zhong Qian Hui ");
+ 198   1      }
+ 199          
+ 200          
+ 201          //滚屏显示名字
+ 202          void Show_NameAct(void)
+ 203          {
+ 204   1              //动态显示名字
+ 205   1              LCD_ShowString(1,1, name[i0]);
+ 206   1      //      LCD_ShowString(1,1, "                ");
+ 207   1      //      LCD_ShowChar(1, i1, ' ');
+ 208   1      //      LCD_ShowChar(1, i1, name[0]);
+ 209   1      //      LCD_ShowChar(1, i2, ' ');
+ 210   1      //      LCD_ShowChar(1, i2, name[1]);
+ 211   1      //      LCD_ShowChar(1, i3, ' ');
+ 212   1      //      LCD_ShowChar(1, i3, name[2]);
+ 213   1      //      LCD_ShowChar(1, i4, ' ');
+ 214   1      //      LCD_ShowChar(1, i4, name[3]);
+ 215   1      //      LCD_ShowChar(1, i5, ' ');
+ 216   1      //      LCD_ShowChar(1, i5, name[4]);
+ 217   1      //      LCD_ShowChar(1, i6, ' ');
+ 218   1      //      LCD_ShowChar(1, i6, name[5]);
+ 219   1      //      LCD_ShowChar(1, i7, ' ');
+ 220   1      //      LCD_ShowChar(1, i7, name[6]);
+ 221   1      //      LCD_ShowChar(1, i8, ' ');
+ 222   1      //      LCD_ShowChar(1, i8, name[7]);
+ 223   1      //      LCD_ShowChar(1, i9, ' ');
+ 224   1      //      LCD_ShowChar(1, i9, name[8]);
+ 225   1      //      LCD_ShowChar(1, i10, ' ');
+ 226   1      //      LCD_ShowChar(1, i10, name[9]);
+ 227   1      //      LCD_ShowChar(1, i11, ' ');
+ 228   1      //      LCD_ShowChar(1, i11, name[10]);
+ 229   1      //      LCD_ShowChar(1, i12, ' ');
+ 230   1      //      LCD_ShowChar(1, i12, name[11]);
+ 231   1      //      LCD_ShowChar(1, i13, ' ');
+ 232   1      //      LCD_ShowChar(1, i13, name[12]);
+ 233   1      //      LCD_ShowChar(1, i14, ' ');
+ 234   1      //      LCD_ShowChar(1, i14, name[13]);
+ 235   1      //      LCD_ShowChar(1, i15, ' ');
+ 236   1      //      LCD_ShowChar(1, i15, name[14]);
+ 237   1      //      LCD_ShowChar(1, i16, ' ');
+C51 COMPILER V9.59.0.0   MAIN                                                              12/03/2023 14:39:33 PAGE 5   
+
+ 238   1      //      LCD_ShowChar(1, i16, name[15]);
+ 239   1      }
+ 240          
+ 241          void Show_TimeAct(void)
+ 242          {
+ 243   1              LCD_ShowChar(2, i1, ' ');
+ 244   1              LCD_ShowNum(2, i1, h/10, 1);
+ 245   1              LCD_ShowChar(2, i2, ' ');
+ 246   1              LCD_ShowNum(2, i2, h%10, 1);
+ 247   1              LCD_ShowChar(2, i3, ' ');
+ 248   1              LCD_ShowChar(2, i3, '-');//显示分隔号
+ 249   1              LCD_ShowChar(2, i4, ' ');
+ 250   1              LCD_ShowNum(2, i4, f/10, 1);
+ 251   1              LCD_ShowChar(2, i5, ' ');
+ 252   1              LCD_ShowNum(2, i5, f%10, 1);
+ 253   1              LCD_ShowChar(2, i6, ' ');
+ 254   1              LCD_ShowChar(2, i6, '-');
+ 255   1              LCD_ShowChar(2, i7, ' ');
+ 256   1              LCD_ShowNum(2, i7, s/10, 1);
+ 257   1              //LCD_ShowChar(2, i8, ' ');
+ 258   1              LCD_ShowNum(2, i8, s%10, 1);
+ 259   1              LCD_ShowChar(2, i9, ' ');
+ 260   1              LCD_ShowChar(2, i10, ' ');
+ 261   1              LCD_ShowChar(2, i11, ' ');
+ 262   1              LCD_ShowChar(2, i12, ' ');
+ 263   1              LCD_ShowChar(2, i13, ' ');
+ 264   1              LCD_ShowChar(2, i14, ' ');
+ 265   1              LCD_ShowChar(2, i15, ' ');
+ 266   1              LCD_ShowChar(2, i16, ' ');
+ 267   1      }       
+ 268          
+ 269          
+ 270          //显示时间
+ 271          void Show_Time(void)
+ 272          {
+ 273   1              LCD_ShowChar(2, 3, '-');//显示分隔号
+ 274   1              LCD_ShowChar(2, 6, '-');
+ 275   1              if(State == Start)//运行模式正常显示时间
+ 276   1              {
+ 277   2                      Show_Hour();
+ 278   2                      Show_Minute();
+ 279   2                      Show_Second();
+ 280   2              }
+ 281   1              else if(State == Stop)//达到闪烁效果
+ 282   1              {
+ 283   2                      if(Time_Mode == 1 || Time_Mode == 2)//时闪烁
+ 284   2                      {
+ 285   3                              Count ++;
+ 286   3                              Count %= 3;
+ 287   3                              if(Count < 2)Show_Hour();
+ 288   3                              else 
+ 289   3                              {
+ 290   4                                       LCD_ShowString(2, 1, "  ");
+ 291   4                              }
+ 292   3                              Show_Minute();
+ 293   3                              Show_Second();
+ 294   3                      }
+ 295   2                       if(Time_Mode == 3 || Time_Mode == 4)//分闪烁
+ 296   2                      {
+ 297   3                              Count ++;
+ 298   3                              Count %= 3;
+ 299   3                              if(Count < 2)Show_Minute();
+C51 COMPILER V9.59.0.0   MAIN                                                              12/03/2023 14:39:33 PAGE 6   
+
+ 300   3                              else 
+ 301   3                              {
+ 302   4                                      LCD_ShowString(2, 4, "  ");
+ 303   4                              }
+ 304   3                              Show_Hour();
+ 305   3                              Show_Second();
+ 306   3                      }
+ 307   2                      if(Time_Mode == 5 || Time_Mode == 6)//秒闪烁
+ 308   2                      {
+ 309   3                              Count ++;
+ 310   3                              Count %= 3;
+ 311   3                              if(Count < 2)Show_Second();
+ 312   3                              else 
+ 313   3                              {
+ 314   4                                      LCD_ShowString(2, 7, "  ");
+ 315   4                              }
+ 316   3                              Show_Hour();
+ 317   3                              Show_Minute();
+ 318   3                      }
+ 319   2                      if(Time_Mode == 0)
+ 320   2                      {
+ 321   3                              Show_Hour();
+ 322   3                              Show_Minute();
+ 323   3                              Show_Second();
+ 324   3                      }
+ 325   2              }
+ 326   1      }
+ 327          
+ 328          //显示时间代码封装
+ 329          void Show_Hour(void)
+ 330          {
+ 331   1              LCD_ShowNum(2, 1, h, 2);        
+ 332   1      }
+ 333          
+ 334          void Show_Minute(void)
+ 335          {
+ 336   1              LCD_ShowNum(2, 4, f, 2);
+ 337   1      }
+ 338          
+ 339          void Show_Second(void)
+ 340          {
+ 341   1              LCD_ShowNum(2, 7, s, 2);
+ 342   1      }   
+ 343                      
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1504    ----
+   CONSTANT SIZE    =    258    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     32    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,70 @@
+C51 COMPILER V9.59.0.0   BUZZER_TIME                                                       04/05/2023 14:09:53 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE BUZZER_TIME
+OBJECT MODULE PLACED IN .\Objects\Buzzer_time.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE Buzzer_time.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listin
+                    -gs\Buzzer_time.lst) OBJECT(.\Objects\Buzzer_time.obj)
+
+line level    source
+
+   1          #include <REGX51.H>
+   2          #include "delay.h" 
+   3          #include <INTRINS.H>
+   4          
+   5          
+   6          sbit Buzzer = P2^5;
+   7          unsigned int i;
+   8          void delay500us();
+   9          
+  10          
+  11          /**
+  12            * @brief  控制蜂鸣器响铃时间
+  13            * @param  时间（ms）
+  14            * @retval 无
+  15            */
+  16          void Buzzer_time (unsigned int xms)             //@11.0592MHz
+  17          {
+  18   1              
+  19   1               for(i=0;i<xms*2;i++)
+  20   1              {
+  21   2                      Buzzer= !Buzzer;
+  22   2                      delay500us();
+  23   2              }
+  24   1              
+  25   1      }
+  26          
+  27          /**
+  28            * @brief  蜂鸣器私有延时函数
+  29            * @param  无
+  30            * @retval 无
+  31            */
+  32          void delay500us()               //@11.0592MHz
+  33          {
+  34   1              unsigned char i, j;
+  35   1      
+  36   1              _nop_();
+  37   1              _nop_();
+  38   1              i = 6;
+  39   1              j = 93;
+  40   1              do
+  41   1              {
+  42   2                      while (--j);
+  43   2              } while (--i);
+  44   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     54    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      2       2
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+C51 COMPILER V9.59.0.0   BUZZER_TIME                                                       04/05/2023 14:09:53 PAGE 2   
+
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

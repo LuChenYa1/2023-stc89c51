@@ -1,0 +1,39 @@
+A51 MACRO ASSEMBLER  TEM3                                                                 10/26/2023 15:32:01 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.2.7.0
+OBJECT MODULE PLACED IN .\Objects\tem3.obj
+ASSEMBLER INVOKED BY: D:\Keil_v5\C51\BIN\A51.EXE tem3.asm SET(SMALL) DEBUG PRINT(.\Listings\tem3.lst) OBJECT(.\Objects\t
+                      em3.obj) EP
+
+LOC  OBJ            LINE     SOURCE
+
+                       1     ;ORG  0000H
+                       2     ;AJMP MAIN
+                       3     ;ORG  0100H
+                       4     
+                       5     ;MAIN: MOV  A, #30H
+                       6               ;JNZ  A, LOOP
+                       7               ;MOV  40H, A
+                       8               ;SJMP LOOP2
+                       9     ;LOOP: JNB ACC.7, LOOP1
+                      10               ;MOV 41H, 0FFH
+                      11               ;SJMP LOOP2
+                      12     ;LOOP1:MOV 42H, #01H
+                      13     ;LOOP2:SJMP $
+                      14               ;               
+*** WARNING #A41 IN 14 (tem3.asm, LINE 14): MISSING 'END' STATEMENT
+A51 MACRO ASSEMBLER  TEM3                                                                 10/26/2023 15:32:01 PAGE     2
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  1 WARNING(S), 0 ERROR(S)

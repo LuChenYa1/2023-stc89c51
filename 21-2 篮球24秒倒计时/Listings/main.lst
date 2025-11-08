@@ -1,0 +1,146 @@
+C51 COMPILER V9.59.0.0   MAIN                                                              11/04/2023 18:45:59 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\main
+                    -.lst) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          //#include <REGF51RC.H>
+   2          //#include "Timer0_Init.h"
+   3          //#include "nixie.h"
+   4          //#include "INT0_Init.h"
+   5          //#include "INT1_Init.h"
+   6          //#include "Key.h"
+   7          
+   8          //typedef unsigned char uint8_t;
+   9          //#define  FirstTimeSet0  if(NewMode != OldMode)Time_24 = 0  //¸Õ¸ÕÖØÐÂ°´ÏÂ¸Ã°´¼üÊ±£¬¶ÔÊ±¼äÖØÐÂ¸³Öµ£¬Á¬Ðø°
+             -´ÏÂÊ±²»ÔÙ±ä»¯
+  10          
+  11          //uint8_t Time_24 = 0;
+  12          //uint8_t KeyNum, Mode, NewMode, OldMode, Flag_0, Flag_1;
+  13          //unsigned char Set_Mode(void);
+  14          //void Get_Mode(void);
+  15          //void Show_Time(uint8_t time);
+  16          
+  17          //void main()
+  18          //{
+  19          //      Timer0_Init();
+  20          //      INT0_Init();
+  21          //      INT1_Init();
+  22          //      
+  23          //      while(1)
+  24          //      {
+  25          //              Get_Mode();
+  26          //              if(Mode == 1)//Ë³¼ÆÊ±
+  27          //              {
+  28          //                      FirstTimeSet0;
+  29          //                      Show_Time(Time_24);
+  30          //              }
+  31          //              else if(Mode == 2)//µ¹¼ÆÊ±
+  32          //              {
+  33          //                      FirstTimeSet0;
+  34          //                      Show_Time(24 - Time_24);
+  35          //              }
+  36          //              else if(Mode == 3)//¹éÁãÇÒÔÝÍ£
+  37          //              {
+  38          //                      FirstTimeSet0;
+  39          //                      Flag_0 = 0;
+  40          //                      Show_Time(Time_24);
+  41          //              }
+  42          //              else if(Mode == 4)//»Ø±í24ÇÒÔÝÍ£
+  43          //              {
+  44          //                      FirstTimeSet0;
+  45          //                      Flag_0 = 0;
+  46          //                      Show_Time(24 - Time_24);
+  47          //              }
+  48          //              else if(Mode == 5)//»Ø±í24
+  49          //              {
+  50          //                      Show_Time(24 - Time_24);
+  51          //              }
+  52          //      }
+  53          //}
+C51 COMPILER V9.59.0.0   MAIN                                                              11/04/2023 18:45:59 PAGE 2   
+
+  54          
+  55          
+  56          ////¶¨Ê±ÖÐ¶Ïº¯Êý
+  57          //void Timer0_Routine () interrupt 1
+  58          //{
+  59          //      static unsigned int T0count;     //¾²Ì¬¾Ö²¿±äÁ¿£¬±£Ö¤²»»á±»ÖØÐÂ¸³Öµ
+  60          
+  61          //      TL0 = 0x66;                                      //È·±£ÖÐ¶ÏÊ±¼ä²»±ä
+  62          //      TH0 = 0xFC;     
+  63          //      T0count++;
+  64          //      Key_Loop();
+  65          //      
+  66          //      if(T0count == 1000)              //Ã¿¸ô1ºÁÃë½øÈëif£¬µÆÁÁÃð±ä»¯
+  67          //      {
+  68          //              T0count = 0;
+  69          //              if(Flag_0 == 1)                //Íâ²¿ÖÐ¶Ï°´¼üÆôÍ£
+  70          //              {
+  71          //                      Time_24 ++;                              //Ê±¼äÒ»Ö±´Ó0Ôö¼Óµ½24£¬Ñ­»·¸Ã¹ý³Ì
+  72          //                      Time_24 %= 25; 
+  73          //              }
+  74          //      }
+  75          //}
+  76          
+  77          ////Íâ²¿ÖÐ¶Ï0º¯Êý
+  78          //void int0() interrupt 0
+  79          //{
+  80          //      if(Flag_0 == 0)Flag_0 = 1;
+  81          //      else if(Flag_0 == 1)Flag_0 = 0;
+  82          //}
+  83          
+  84          
+  85          ////Íâ²¿ÖÐ¶Ï1º¯Êý
+  86          //void int1() interrupt 2
+  87          //{
+  88          //      Mode = 5;
+  89          //      Time_24 = 0;
+  90          //}
+  91          
+  92          
+  93          ////É¨ÃèµÃµ½ÐÂÀÏÄ£Ê½Öµ
+  94          //void Get_Mode (void)
+  95          //{
+  96          //      OldMode = Mode;
+  97          //      NewMode = Set_Mode();
+  98          //}
+  99          
+ 100          
+ 101          ////¸ù¾Ý°´¼üÉèÖÃÄ£Ê½
+ 102          //unsigned char Set_Mode(void)
+ 103          //{
+ 104          //      KeyNum = Key();
+ 105          //      if(KeyNum == 1)Mode = 1;         //°´¼ü°´ÏÂ¼´×ª»»Ä£Ê½
+ 106          //      else if(KeyNum == 2)Mode = 2;
+ 107          //      else if(KeyNum == 3)Mode = 3;
+ 108          //      else if(KeyNum == 4)Mode = 4;
+ 109          //      return Mode;
+ 110          //}
+ 111          
+ 112          ////ÏÔÊ¾º¯Êý
+ 113          //void Show_Time(uint8_t time)
+ 114          //{
+ 115          //      nixie(1, time / 10);
+C51 COMPILER V9.59.0.0   MAIN                                                              11/04/2023 18:45:59 PAGE 3   
+
+ 116          //      nixie(2, time % 10);
+ 117          //}
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   ----    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,111 @@
+A51 MACRO ASSEMBLER  SORT                                                                 10/31/2023 15:38:33 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.2.7.0
+OBJECT MODULE PLACED IN .\Objects\sort.obj
+ASSEMBLER INVOKED BY: D:\Keil_v5\C51\BIN\A51.EXE sort.asm SET(SMALL) DEBUG PRINT(.\Listings\sort.lst) OBJECT(.\Objects\s
+                      ort.obj) EP
+
+LOC  OBJ            LINE     SOURCE
+
+0000                   1                             ORG  0000H
+0000 2100              2                             AJMP MAIN
+0100                   3                             ORG  0100H
+0100                   4     MAIN: 
+                       5                             ;Ò»¡¢ÏÈ¸øÆ¬ÄÚRAM50H~5AHËæ»ú¸³Öµ
+0100 755056            6                               MOV   50H, #56H
+0103 755150            7                               MOV   51H, #50H
+0106 755212            8                               MOV   52H, #12H
+0109 755378            9                               MOV   53H, #78H
+010C 755437           10                               MOV   54H, #37H
+010F 755589           11                               MOV   55H, #89H
+0112 755652           12                               MOV   56H, #52H
+0115 755704           13                               MOV   57H, #04H
+0118 755804           14                               MOV   58H, #04H
+011B 755929           15                               MOV   59H, #29H
+011E 755A67           16                               MOV   5AH, #67H
+                      17                               
+                      18                               ;ÅäÖÃ×Ó³ÌÐòÏà¹Ø²ÎÊµÄÖµ
+0121 745A             19                               MOV   A, #5AH;         Î²µØÖ·
+0123 753050           20                               MOV   30H, #50H;       30H´¢´æÊ×µØÖ·
+0126 9530             21                               SUBB  A, 30H;          AµÃµ½Ñ­»·´ÎÊ
+0128 F531             22                               MOV   31H, A;          31H´¢´æÑ­»·´ÎÊ10
+012A 312E             23                               ACALL SORT;            µ÷ÓÃ×Ó³ÌÐòÍê³ÉÅÅÐò 
+012C 80FE             24                               SJMP  $;                               ½áÊøÖ¸Áî
+                      25     
+                      26     ;µ÷ÓÃ×Ó³ÌÐò
+012E                  27     SORT:
+                      28                              ;¶þ¡¢³õÊ¼»¯
+012E AE31             29                               MOV   R6, 31H;                 ÍâÑ­»·¿ØÖÆ´ÎÊ
+                      30                             
+0130                  31     LOOP1:            ;ÍâÑ­»·,ÏÂÃæÒÑ¾­ÓÐDJNZ£¬ËùÒÔÕâÀï²»ÐèÒª¶ÔÑ­»·´ÎÊ¼õÒ»
+                      32                               ;×¢Òâ£¬½øÈëÄÚÑ­»·Ö®Ç°±ØÐë¶ÔÒÔÏÂÏà¹Ø²ÎÊÖØÐÂ³õÊ¼»¯
+0130 A830             33                               MOV   R0, 30H;                 ³õÊ¼±È½ÏµØÖ·
+0132 AF31             34                               MOV   R7, 31H;                 ÄÚÑ­»·¿ØÖÆ´ÎÊ
+0134 75F000           35                               MOV   B, #00H;         ½«±êÖ¾Î»ÇåÁã,²»ÄÜÓÃCY×÷Îª±êÖ¾Î»£¬ËüÓÃÔÚÁËC
+                             JNEÖÐ
+                      36                               
+0137                  37     LOOP2:            ;ÄÚÑ­»·,ÏÂÃæÒÑ¾­ÓÐDJNZ£¬ËùÒÔÕâÀï²»ÐèÒª¶ÔÑ­»·´ÎÊ¼õÒ»
+0137 E6               38                               MOV   A, @R0;                  ½«Òª±È½Ï´óÐ¡µÄÇ°Õß¸³Öµ¸øA
+0138 8820             39                               MOV   20H, R0;                 20H×÷ÎªÖÐ×ªÕ¾
+013A A920             40                               MOV   R1, 20H ;        R1ÔÝ´æÇ°ÕßµØÖ·
+013C 08               41                               INC   R0;                      R0´¢´æºóÕßµØÖ·
+013D 8621             42                               MOV   21H, @R0;                ½«Òª±È½Ï´óÐ¡µÄºóÕß¸³Öµ¸ø21H,ÒòÎªCJ
+                             NEÎÞ·¨ÓÃ@Rn
+013F B52109           43                               CJNE  A, 21H, NotEqual;ÁîÇ°ÕßºÍºóÕß±È½Ï£¬²»ÏàµÈÔòÌø×ªNotEqualÅÐ¶Ï
+                             ÊÇ·ñ»»Î»
+                      44                               
+0142 DFF3             45     interrecycle: DJNZ  R7, LOOP2;           ÅÐ¶Ï9´ÎÄÚÑ­»·ÊÇ·ñÍê±Ï£¬Íê±Ï¾ÍÏòÏÂÔËÐÐ
+0144 D5F002           46                               DJNZ  B, OVER;         Èô±êÖ¾Î»BÎª0£¬Ö¤Ã÷ÅÅÐòÒÑ¾­Íê³É£¬²»ÔÙ½øÈëÍâ
+                             Ñ­»·£¬Ìø×ª½øÈë½áÊøÐÐ
+0147 DEE7             47                               DJNZ  R6, LOOP1;               ÅÐ¶Ï9´ÎÍâÑ­»·ÊÇ·ñÍê±Ï£¬Íê±ÏÔòÍ£Ö¹Ô
+                             ËÐÐ
+0149 800F             48     OVER:             SJMP  Finish;                  ½áÊøÔËÐÐÃüÁî
+                      49                             
+014B 30D702           50     NotEqual:     JNB   PSW.7, exchange; µ±Ç°Õß´óÓÚºóÕß£¬Ìø×ªÖ´ÐÐ»»Î»³ÌÐò_HuHuan
+014E 80F2             51                               SJMP  interrecycle;    ²»Ìø×ªÔò½áÊøµ±´ÎÑ­»·£¬·µ»ØÅÐ¶ÏÄÚÑ­»·ÊÇ·ñ½á
+                             Êø
+A51 MACRO ASSEMBLER  SORT                                                                 10/31/2023 15:38:33 PAGE     2
+
+                      52                             
+0150 3154             53     exchange:         ACALL _HuHuan;         µ÷ÓÃ»»Î»¹¦ÄÜ×Ó³ÌÐò
+0152 80EE             54                               SJMP  interrecycle;    »»Î»Íê³É,½áÊøµ±´ÎÑ­»·£¬·µ»ØÅÐ¶ÏÄÚÑ­»·ÊÇ·ñ½
+                             áÊø
+                      55                             
+0154                  56     _HuHuan:      ;°ÑÁ½¸öµØÖ·µÄÖµ»¥»»
+0154 75F001           57                               MOV   B, #01H;         Ò»µ©·¢Éú½»»»£¬¾Í½«±êÖ¾Î»ÖÃÒ»
+0157 C6               58                               XCH   A, @R0;                  ½«AÖÐ°üº¬µÄÇ°ÕßºÍ(R0)Ö¸ÏòµÄºóÕß½øÐ
+                             Ð»¥»»
+0158 F7               59                               MOV   @R1, A;          ½«AÖÐ°üº¬µÄºóÕß¸³Öµ¸øR1ÖÐÔÝ´æµÄÉÏÒ»Î»µØÖ·
+0159 22               60                               RET;                                   ·µ»Ø×Ó³ÌÐò
+                      61                             
+015A 22               62     Finish:           RET;                   ·µ»Ø×Ó³ÌÐò                  
+                      63                               END
+                                                     
+                                                     
+A51 MACRO ASSEMBLER  SORT                                                                 10/31/2023 15:38:33 PAGE     3
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+B. . . . . . . . .  D ADDR   00F0H   A   
+EXCHANGE . . . . .  C ADDR   0150H   A   
+FINISH . . . . . .  C ADDR   015AH   A   
+INTERRECYCLE . . .  C ADDR   0142H   A   
+LOOP1. . . . . . .  C ADDR   0130H   A   
+LOOP2. . . . . . .  C ADDR   0137H   A   
+MAIN . . . . . . .  C ADDR   0100H   A   
+NOTEQUAL . . . . .  C ADDR   014BH   A   
+OVER . . . . . . .  C ADDR   0149H   A   
+PSW. . . . . . . .  D ADDR   00D0H   A   
+SORT . . . . . . .  C ADDR   012EH   A   
+_HUHUAN. . . . . .  C ADDR   0154H   A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

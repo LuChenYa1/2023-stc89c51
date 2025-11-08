@@ -1,0 +1,8 @@
+".\Objects\main.obj",
+".\Objects\LCD1602.obj",
+".\Objects\Key.obj",
+".\Objects\Timer0_Init.obj",
+".\Objects\DS1302.obj",
+".\Objects\delay.obj" 
+TO ".\Objects\project" 
+PRINT(".\Listings\project.m51") DISABLEWARNING (16) 

@@ -1,0 +1,80 @@
+C51 COMPILER V9.59.0.0   UART                                                              03/28/2023 20:46:48 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE UART
+OBJECT MODULE PLACED IN .\Objects\UART.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE UART.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\UART
+                    -.lst) OBJECT(.\Objects\UART.obj)
+
+line level    source
+
+   1          #include <REGX51.H>
+   2          
+   3          typedef  unsigned char uchar;
+   4          /**
+   5            * @brief  ÉèÖÃ´®¿Ú½ÓÊÕÄ£Ê½£¬Ò²ÄÜ·¢ËÍ
+   6            * @param  ÎÞ
+   7            * @retval ÎÞ
+   8            */
+   9          void UART_Init(void)      //4800bps@11.0592MHz
+  10          {
+  11   1                                    //0x50±È0x40¶àÁËREN=1,ÔÊÐí½ÓÊÕÊý¾Ý
+  12   1              SCON = 0x50;          //´®¿ÚÄ£Ê½1£¨³£ÓÃ£©£¬°ËÎ»Êý¾Ý£¬¿É±ä²¨ÌØÂÊ£¬ºÍ¶¨Ê±Æ÷Ä£Ê½2£¨°ËÎ»×Ô¶¯ÖØ×°£©²»ÊÇÒ»¸ö¶«Î
+             -÷
+  13   1              PCON |=0x80;          //×î¸ßÎ»ÖÃÒ»£¬ÆäËûÎ»²»±ä£¬²¨ÌØÂÊ¼Ó±¶£¨±¾À´ÊÇÎªÁË¼õÐ¡Îó²î£¬µ«ÕâÀïÒÑ¾­ÎÞÎó²î£¬¿É²»¼Ó±
+             -¶£©
+  14   1              //      AUXR &= 0xBF;     //¸ß¼¶¹¦ÄÜ£¬¸ÃÐÍºÅµ¥Æ¬»úÃ»ÓÐ  
+  15   1              //      AUXR &= 0xFE;     //µ÷12TºÍ¶¨Ê±Æ÷1
+  16   1              TMOD &=0x0F;          //¸ßËÄÎ»ÇåÁã£¬µÍËÄÎ»²»±ä£¬µ÷¶¨Ê±Æ÷1
+  17   1          TMOD |=0x20;          //µ÷¶¨Ê±Æ÷1µÄÄ£Ê½¶þ£¬°ËÎ»×Ô¶¯ÖØ×°Ä£Ê½
+  18   1              TL1=0xF4;             //ÉèÖÃ¶¨Ê±³õÖµ
+  19   1              TH1=0xF4;             //Éè¶¨¶¨Ê±Æ÷ÖØ×°Öµ
+  20   1              ET1=0;                //½ûÖ¹¶¨Ê±Æ÷1ÖÐ¶Ï£¬Ö»Ìá¹©¶¨Ê±¹¦ÄÜ£¬ÖÐ¶ÏÃ»ÓÐÓÃ
+  21   1              TR1=1;                //Æô¶¯¶¨Ê±Æ÷
+  22   1              //¶ÀÊôÓÚÐèÒª½ÓÊÜÊý¾ÝµÄÊ±ºòµÄÅäÖÃ
+  23   1              EA=1;                 //¿ªÆôÖÐ¶Ï×Ü¿ª¹Ø
+  24   1              ES=1;                 //¿ªÆô´®¿ÚÖÐ¶Ï
+  25   1      }
+  26          //¶¨Ê±Æ÷1ÖÐ¶ÏµÄ´¥·¢Ìõ¼þÊÇÊ±¼äµ½ÁË£¬¶¨Ê±½áÊø£¬¶¨Ê±Æ÷1ÓÃÀ´ÅäÖÃ²¨ÌØÂÊ£¬Ã»ÓÐ±ØÒª¿ªÆôÖÐ¶Ï
+  27          //´®¿ÚÖÐ¶ÏµÄ´¥·¢Ìõ¼þÊÇ½ÓÊÕÊý¾Ý»òÕß·¢ËÍÊý¾Ý
+  28          
+  29          /**
+  30            * @brief  ÓÉ´®¿ÚÏòµçÄÔ·¢ËÍÒ»¸öÊý×Ö
+  31            * @param  Êý×Ö×Ö·û
+  32            * @retval ÎÞ
+  33            */
+  34          void UART_SendByte(uchar byte)
+  35          {
+  36   1              SBUF=byte;                    //SBUFÓÐÁ½¸ö£¬Ò»¸öÊÇ·¢ËÍÇø£¬Ò»¸öÊÇ½ÓÊÜÇø£¬¿Õ¼ä²»Ò»Ñù£¬µ«Õ¼ÓÃÍ¬Ò»¸öµØÖ·
+  37   1              while(TI==0);
+  38   1              TI=0;                         //Ò»µ©·¢ËÍ£¬Á¢¼´Èí¼þ¸´Î»
+  39   1      }
+  40           /**
+  41            * @brief  ´®¿ÚÖÐ¶Ïº¯ÊýÄ£°å
+  42            * @param  ÎÞ
+  43            * @retval ÎÞ
+  44            */
+  45          //void UART_Routine()   interrupt 4 //´®¿ÚÖÐ¶Ï¶ÔÓ¦ÖÐ¶ÏºÅ
+  46          //{
+  47          //      if(RI==1)                     //·¢ËÍºÍ½ÓÊÕÖÐ¶ÏÕ¼ÓÃµÄÊÇÒ»¸öÍ¨µÀ£¬¶¼»á´¥·¢ÖÐ¶Ïº¯Êý£¬¼ÓifÅÐ¶Ï·ÀÖ¹Îó´¥
+  48          //      {
+  49          //              RI=0;                     //£¨ÊÖ¶¯£©Èí¼þ¸´Î»
+  50          //      }
+  51          //}
+  52          
+C51 COMPILER V9.59.0.0   UART                                                              03/28/2023 20:46:48 PAGE 2   
+
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     35    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

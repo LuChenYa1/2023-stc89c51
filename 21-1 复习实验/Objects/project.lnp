@@ -1,0 +1,14 @@
+".\Objects\main.obj",
+".\Objects\delay.obj",
+".\Objects\tem.obj",
+".\Objects\tem1.obj",
+".\Objects\tem2.obj",
+".\Objects\tem3.obj",
+".\Objects\tem4.obj",
+".\Objects\tem5.obj",
+".\Objects\TeamWork.obj",
+".\Objects\Key.obj",
+".\Objects\MIAN_NEW.obj",
+".\Objects\sort.obj" 
+TO ".\Objects\project" 
+PRINT(".\Listings\project.m51")

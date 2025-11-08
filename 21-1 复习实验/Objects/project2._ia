@@ -1,0 +1,1 @@
+"project2.asm" SET (SMALL) DEBUG PRINT(.\Listings\project2.lst) OBJECT(.\Objects\project2.obj) EP

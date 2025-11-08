@@ -1,0 +1,1 @@
+"nixie.c" OPTIMIZE (8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\nixie.lst) OBJECT(.\Objects\nixie.obj)

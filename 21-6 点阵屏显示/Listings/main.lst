@@ -1,0 +1,270 @@
+C51 COMPILER V9.59.0.0   MAIN                                                              12/14/2023 18:58:12 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\main
+                    -.lst) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include <REGX51.H>
+   2          #include "MatrixLED.h"
+   3          #include "MatrixKey.h"
+   4          #include "Timer0_Init.h"
+   5          #include "Data_MatrixLED.h"
+   6          #include "nixie.h"
+   7          #include "delay.h"
+   8          
+   9          #define  uint8_t unsigned char 
+  10          uint8_t a, Offset, Count;     //滚屏显示变量
+  11          uint8_t MatrixKeyNum, Mode, Flag_Number, Length_Number, Flag_Start_Stop, Num_Count;
+  12          unsigned long int Number; 
+  13          uint8_t Number_Array[8] = {0};//存放输入的数字
+  14          
+  15          void nixie_Show();
+  16          void ShowNumber_Act(uint8_t Number);
+  17          void Array_GetNumber(void);
+  18          long int Pow(char x, char y);
+  19          
+  20          void main ()
+  21          {
+  22   1              Timer0_Init();
+  23   1              MatrixLED_Init();
+  24   1              nixie(8,16);//消残影
+  25   1              
+  26   1      
+  27   1              // while (1)//四、滚屏显示名字
+  28   1          // {
+  29   1          //  
+  30   1          // }
+  31   1      
+  32   1      //五、滚屏显示输入数字
+  33   1              while(1)
+  34   1              {
+  35   2                      MatrixKeyNum = MatrixKey();
+  36   2                      if(MatrixKeyNum)                                  
+  37   2                      { 
+  38   3                              if(MatrixKeyNum <= 10)                            //确保输入数字时，输入的是合法的小于等于
+             -10的数字键
+  39   3                              {
+  40   4                                      if(Num_Count < 8)                         //最大位数为8
+  41   4                                      {
+  42   5                                              Number *= 10;                         //新输入的数字作个位
+  43   5                                              Number += MatrixKeyNum % 10;          //输入10即为0
+  44   5                                              Num_Count++;                          //输入一个数，总位数加一
+  45   5                                      }                       
+  46   4                              }               
+  47   3                              else if(MatrixKeyNum == 11)                   //11‘A’键，确认最终输入的数字
+  48   3                              {
+  49   4                                      Length_Number = Num_Count;
+  50   4                                      Num_Count = 8; 
+  51   4                                      Array_GetNumber();
+  52   4                              }
+  53   3                              else if(MatrixKeyNum == 12)                   //12‘B’键，启停滚动显示输入数字
+C51 COMPILER V9.59.0.0   MAIN                                                              12/14/2023 18:58:12 PAGE 2   
+
+  54   3                              {
+  55   4                                      Flag_Start_Stop = !Flag_Start_Stop;
+  56   4                              }
+  57   3                              else if(MatrixKeyNum == 13)                   //13‘C’键，暂停滚屏显示输入数字
+  58   3                              {
+  59   4                                      Flag_Start_Stop = 0;
+  60   4                              }
+  61   3                              else if(MatrixKeyNum == 14)                   //14‘D’键，重新输入数字，原数字作废
+  62   3                              {
+  63   4                                      Num_Count = 0;                            //位数清零
+  64   4                                      Number = 0;                                                               //数字清零
+  65   4                              }
+  66   3                              else if(MatrixKeyNum == 15)                   //15‘E’键
+  67   3                              {
+  68   4                                      Mode ++;
+  69   4                                      Mode %= 5;
+  70   4                              }
+  71   3                      }
+  72   2                      nixie_Show();//数码管显示当前正在输入的数字
+  73   2                      if(Flag_Start_Stop == 1)//滚屏显示最终输入的数字
+  74   2                      {
+  75   3                              if(Flag_Number == 0)ShowNumber_Act(Number_Array[0]);    
+  76   3                              else if(Flag_Number == 1)ShowNumber_Act(Number_Array[1]);       
+  77   3                              else if(Flag_Number == 2)ShowNumber_Act(Number_Array[2]);
+  78   3                              else if(Flag_Number == 3)ShowNumber_Act(Number_Array[3]);       
+  79   3                              else if(Flag_Number == 4)ShowNumber_Act(Number_Array[4]);
+  80   3                              else if(Flag_Number == 5)ShowNumber_Act(Number_Array[5]);       
+  81   3                              else if(Flag_Number == 6)ShowNumber_Act(Number_Array[6]);
+  82   3                              else if(Flag_Number == 7)ShowNumber_Act(Number_Array[7]);
+  83   3                      }
+  84   2                      if(Mode == 1)MatrixLED_8_ShowColumn(8, 0xff);//一、显示一行
+  85   2                      else if(Mode == 2)
+  86   2                      {
+  87   3                               //二、显示数字0
+  88   3                              for(a = 1; a < 9; a++)
+  89   3                              {
+  90   4                                      MatrixLED_8_ShowColumn(a, Show0[a-1]);
+  91   4                              }
+  92   3                      }
+  93   2                      else if(Mode == 3)
+  94   2                      {
+  95   3                              //三、滚屏显示0~3
+  96   3                              for(a = 1; a < 9; a++)
+  97   3                              {
+  98   4                                      MatrixLED_8_ShowColumn(a,Show0_3[a+Offset-1]);
+  99   4                              }
+ 100   3                              Count++;
+ 101   3                              if(Count == 10)
+ 102   3                              {
+ 103   4                                      Count = 0;
+ 104   4                                      Offset += 1;
+ 105   4                                      if(Offset == 32)     //总列数40，所以最左端增加到40-8就要回到0，防止越界
+ 106   4                                      {
+ 107   5                                              Offset = 0;
+ 108   5                                      }
+ 109   4                              }
+ 110   3                              
+ 111   3                      }
+ 112   2                      else if(Mode == 4)
+ 113   2                      {
+ 114   3                              for(a = 1; a < 17; a++)
+ 115   3                              {
+C51 COMPILER V9.59.0.0   MAIN                                                              12/14/2023 18:58:12 PAGE 3   
+
+ 116   4                                      MatrixLED_16_ShowColumn(a,ShowName_H[a+Offset-1], ShowName_L[a+Offset-1]);
+ 117   4                              }
+ 118   3                              Count++;
+ 119   3                              if(Count == 10)
+ 120   3                              {
+ 121   4                                      Count = 0;
+ 122   4                                      Offset ++;
+ 123   4                                      if(Offset == 48)     //以上，同理
+ 124   4                                      {
+ 125   5                                              Offset = 0;
+ 126   5                                      }
+ 127   4                              }
+ 128   3                      }
+ 129   2              }
+ 130   1      }
+ 131          
+ 132          //将最终输入的数字依次赋值给数组，方便后期从大到小滚屏显示
+ 133          void Array_GetNumber()
+ 134          {
+ 135   1              long int i = 10000000, temp;//用于确定输入数字的总位数
+ 136   1              char j = 0, m;//数字的总位数
+ 137   1              while(1)
+ 138   1              {
+ 139   2                      if(Number / i != 0)
+ 140   2                      {       
+ 141   3                              Number_Array[0] = Number / i % 10;//将数字最高位赋值给数组首位
+ 142   3                              temp = i;//保存此时间接代表总位数的i值
+ 143   3                              while(1)
+ 144   3                              {
+ 145   4                                      temp /= 10;
+ 146   4                                      if(temp != 0)j++;//用j得到数字的直接位数
+ 147   4                                      else break;
+ 148   4                              }
+ 149   3                              break;
+ 150   3                      }
+ 151   2                      i /= 10;
+ 152   2              }
+ 153   1              for(m = 1; m < j+1; m++)//数字从大到小依次赋值给数组
+ 154   1              {
+ 155   2                      Number_Array[m] = Number / (i / Pow(10, m)) % 10;
+ 156   2              }
+ 157   1      }
+ 158          
+ 159          //x的y次方
+ 160          long int Pow(char x, char y)
+ 161          {
+ 162   1              long int sum = 1, i;
+ 163   1              for(i = 0; i < y; i++)
+ 164   1              {
+ 165   2                      sum = sum * x;
+ 166   2              }
+ 167   1              return sum;
+ 168   1      }
+ 169          
+ 170          //数码管显示输入的数字
+ 171          void nixie_Show()
+ 172          {
+ 173   1              nixie(1, Number / 10000000 % 10);
+ 174   1              nixie(2, Number / 1000000 % 10);
+ 175   1              nixie(3, Number / 100000 % 10);
+ 176   1              nixie(4, Number / 10000 % 10);
+ 177   1              nixie(5, Number / 1000 % 10);
+C51 COMPILER V9.59.0.0   MAIN                                                              12/14/2023 18:58:12 PAGE 4   
+
+ 178   1              nixie(6, Number / 100 % 10);
+ 179   1              nixie(7, Number / 10 % 10);
+ 180   1              nixie(8, Number % 10);
+ 181   1      }
+ 182          
+ 183          //定时器中断函数
+ 184          void Timer0_Routine () interrupt 1
+ 185          {
+ 186   1              static unsigned int T0count1, T0count2;//静态局部变量
+ 187   1      
+ 188   1              TL0 = 0x66;                                            //重新赋初值
+ 189   1              TH0 = 0xFC;     
+ 190   1              
+ 191   1              T0count1 ++;
+ 192   1              if(T0count1 == 20)
+ 193   1              {
+ 194   2                      T0count1 = 0;
+ 195   2                      MatrixKey_Loop();                  //定时器扫描矩阵键盘
+ 196   2              }
+ 197   1              
+ 198   1              T0count2++;
+ 199   1              if(T0count2 == 2)                      //定时器扫描数码管
+ 200   1              {
+ 201   2                      T0count2 = 0;
+ 202   2                      nixie_Loop();
+ 203   2              }
+ 204   1      }
+ 205          
+ 206          //滚屏显示单个数字
+ 207          void ShowNumber_Act(uint8_t Number)
+ 208          {
+ 209   1              for(a = 1; a < 17; a++)
+ 210   1              {
+ 211   2                      switch (Number)
+ 212   2                      {
+ 213   3                              case 0:MatrixLED_16_ShowColumn(a,Show0_H[a+Offset-1], Show0_L[a+Offset-1]);break;
+ 214   3                              case 1:MatrixLED_16_ShowColumn(a,Show1_H[a+Offset-1], Show1_L[a+Offset-1]);break;
+ 215   3                              case 2:MatrixLED_16_ShowColumn(a,Show2_H[a+Offset-1], Show2_L[a+Offset-1]);break;
+ 216   3                              case 3:MatrixLED_16_ShowColumn(a,Show3_H[a+Offset-1], Show3_L[a+Offset-1]);break;
+ 217   3                              case 4:MatrixLED_16_ShowColumn(a,Show4_H[a+Offset-1], Show4_L[a+Offset-1]);break;
+ 218   3                              case 5:MatrixLED_16_ShowColumn(a,Show5_H[a+Offset-1], Show5_L[a+Offset-1]);break;
+ 219   3                              case 6:MatrixLED_16_ShowColumn(a,Show6_H[a+Offset-1], Show6_L[a+Offset-1]);break;
+ 220   3                              case 7:MatrixLED_16_ShowColumn(a,Show7_H[a+Offset-1], Show7_L[a+Offset-1]);break;
+ 221   3                              case 8:MatrixLED_16_ShowColumn(a,Show8_H[a+Offset-1], Show8_L[a+Offset-1]);break;
+ 222   3                              case 9:MatrixLED_16_ShowColumn(a,Show9_H[a+Offset-1], Show9_L[a+Offset-1]);break;
+ 223   3                      }
+ 224   2              }
+ 225   1              Count++;
+ 226   1              if(Count == 3)
+ 227   1              {
+ 228   2                      Count = 0;
+ 229   2                      Offset ++;
+ 230   2                      if(Offset == 32)     //显示完一个数字后，Flag_Number自增，显示下一个数字
+ 231   2                      {
+ 232   3                              Offset = 0;
+ 233   3                              Flag_Number++;
+ 234   3                              Flag_Number %= Length_Number;
+ 235   3                      }
+ 236   2              }
+ 237   1      }
+
+
+C51 COMPILER V9.59.0.0   MAIN                                                              12/14/2023 18:58:12 PAGE 5   
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1533    ----
+   CONSTANT SIZE    =   1280    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     25      21
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

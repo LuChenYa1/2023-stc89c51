@@ -1,0 +1,79 @@
+C51 COMPILER V9.59.0.0   AT24C02                                                           04/08/2023 20:24:57 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE AT24C02
+OBJECT MODULE PLACED IN .\Objects\AT24C02.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE AT24C02.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\A
+                    -T24C02.lst) OBJECT(.\Objects\AT24C02.obj)
+
+line level    source
+
+   1          #include <REGX51.H>
+   2          #include "I2C.h"
+   3          
+   4          #define AT24C02_ADDRESS 0xA0
+   5          
+   6          /**
+   7            * @brief  向AT24C02存储器中写入数据 
+   8            * @param  WORD_ADDRESS，要写入的字节空间的位置
+   9            * @param  Data，要写入的数据
+  10            * @retval 无
+  11            */
+  12          void AT24C02_WriteByte(unsigned char WORD_ADDRESS,Data)
+  13          {
+  14   1              I2C_Start();                  //开始
+  15   1              I2C_SendByte(AT24C02_ADDRESS);//对AT24C02发送写命令
+  16   1              I2C_ReceiveACK();             //接收应答
+  17   1              I2C_SendByte(WORD_ADDRESS);   //指定要写入的字地址
+  18   1              I2C_ReceiveACK();             //接收应答
+  19   1              I2C_SendByte(Data);           //向EEPROM存储器发送数据
+  20   1              I2C_ReceiveACK();             //接收应答
+  21   1              I2C_Stop();                   //停止
+  22   1      }
+  23           
+  24          
+  25          /**
+  26            * @brief  从存储器中读取数据
+  27            * @param  WORD_ADDRESS，要读取的字节的位置
+  28            * @retval 数据的值，写入的数据是什么形式，读出来的就是什么形式
+  29            */
+  30          unsigned char AT24C02_ReadByte(unsigned char WORD_ADDRESS)
+  31          {
+  32   1              unsigned char Data;
+  33   1              /**********指定地址*********/
+  34   1              
+  35   1              I2C_Start();                      //开始
+  36   1              I2C_SendByte(AT24C02_ADDRESS);    //发送写命令 
+  37   1              I2C_ReceiveACK();                 //接收应答
+  38   1              I2C_SendByte(WORD_ADDRESS);       //确定目标空间位置
+  39   1              I2C_ReceiveACK();                 //没有停止函数，因为是同一个数据帧
+  40   1              
+  41   1              /***************************/
+  42   1              
+  43   1              I2C_Start();                       //开始
+  44   1              I2C_SendByte(AT24C02_ADDRESS|0x01);//发送读命令
+  45   1              I2C_ReceiveACK();                  //接收应答
+  46   1              Data = I2C_ReceiveByte();          //得到读取的字节数据
+  47   1              I2C_SendACK(1);                    //发送应答，这里一般为1（非应答）
+  48   1              I2C_Stop();                        //停止
+  49   1              
+  50   1              /***************************/
+  51   1              
+  52   1              return Data;
+  53   1      }
+
+C51 COMPILER V9.59.0.0   AT24C02                                                           04/08/2023 20:24:57 PAGE 2   
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     84    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       5
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

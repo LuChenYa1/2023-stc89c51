@@ -1,0 +1,73 @@
+C51 COMPILER V9.59.0.0   SERVO                                                             01/19/2024 20:41:17 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE SERVO
+OBJECT MODULE PLACED IN .\Objects\Servo.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE Servo.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\Ser
+                    -vo.lst) OBJECT(.\Objects\Servo.obj)
+
+line level    source
+
+   1          #include <REGX51.H>
+   2          #include "delay.h"
+   3          
+   4          #define uint8_t unsigned char
+   5          sbit PWM_Servo = P3^0;
+   6          
+   7          uint8_t Angle;
+   8          
+   9          void contral_0(void)
+  10          {
+  11   1              Angle = 0;   
+  12   1              Delay_ms(500);
+  13   1      }
+  14          void contral_4(void)
+  15          {
+  16   1              Angle = 4;   
+  17   1              Delay_ms(500);
+  18   1      }void contral_1(void)
+  19          {
+  20   1              Angle = 1;   
+  21   1              Delay_ms(200);
+  22   1      }
+  23          
+  24          //定时中断函数
+  25          void Timer0_Routine () interrupt 1
+  26          {
+  27   1              static unsigned int T0count1;//静态局部变量
+  28   1      
+  29   1              TL0 = 0x33;                                  //重新赋初值
+  30   1              TH0 = 0xFE;     
+  31   1              
+  32   1              //舵机转动
+  33   1              T0count1++;
+  34   1              if(T0count1 == 40)           //0.5ms * 40 = 20ms
+  35   1              {
+  36   2                      T0count1 = 0;
+  37   2              }
+  38   1              if(T0count1 <= Angle)
+  39   1              {
+  40   2                       PWM_Servo = 1;
+  41   2              }
+  42   1              else
+  43   1              {
+  44   2                       PWM_Servo = 0;
+  45   2              }
+  46   1      }
+  47                  
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     80    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+C51 COMPILER V9.59.0.0   SERVO                                                             01/19/2024 20:41:17 PAGE 2   
+
+   DATA SIZE        =      3    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,24 @@
+C51 COMPILER V9.60.7.0   JUZHEN                                                            03/09/2024 10:10:30 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE JUZHEN
+OBJECT MODULE PLACED IN .\Objects\juzhen.obj
+COMPILER INVOKED BY: C:\C51\BIN\C51.EXE ..\¸´Ï°È«²¿\juzhen.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listing
+                    -s\juzhen.lst) TABS(2) OBJECT(.\Objects\juzhen.obj)
+
+line level    source
+
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   ----    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

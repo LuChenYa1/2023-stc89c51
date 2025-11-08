@@ -1,0 +1,128 @@
+C51 COMPILER V9.59.0.0   CAR                                                               05/28/2023 19:59:28 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE CAR
+OBJECT MODULE PLACED IN .\Objects\car.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE car.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\car.l
+                    -st) OBJECT(.\Objects\car.obj)
+
+line level    source
+
+   1          #include <REGX51.H>
+   2          #include "Timer0_Init.h"
+   3          #include "motor.h"
+   4          
+   5          //转向用制动调节，速度用使能调节
+   6          //1使能
+   7          sbit ENA = P0^2;//right
+   8          sbit ENB = P0^3;//left
+   9          
+  10          unsigned char Speed_A,Speed_B;
+  11          void Car_Go()//向前直行
+  12          {
+  13   1              Speed_A = 20;Speed_B = 20;
+  14   1              Left_go();
+  15   1              Right_go();
+  16   1      }
+  17          
+  18          void Car_Back()//向后直行
+  19          {
+  20   1              Speed_A = 20;Speed_B = 20;
+  21   1              Left_back();
+  22   1          Right_back();
+  23   1      }
+  24          
+  25          void Car_Stop()//停止
+  26          {
+  27   1              Speed_A = 0;Speed_B = 0;
+  28   1              Left_stop();
+  29   1              Right_stop();
+  30   1      }
+  31          
+  32          void Car_LeftGo()//原地向前左拐
+  33          {
+  34   1              Speed_A = 50;Speed_B =20;
+  35   1              //Left_stop();
+  36   1              Left_back();
+  37   1              Right_go();
+  38   1      }
+  39          
+  40          void Car_RightGo()//原地向前右拐
+  41          {
+  42   1              Speed_B = 50;Speed_A=20;
+  43   1              //Right_stop();
+  44   1              Right_back();
+  45   1              Left_go();
+  46   1      }
+  47          
+  48          void Car_LeftBack()//原地向后左拐
+  49          {
+  50   1              Speed_A = 50;Speed_B =20;
+  51   1              Left_go();//Left_stop();
+  52   1              Right_back();
+  53   1      }
+  54          
+C51 COMPILER V9.59.0.0   CAR                                                               05/28/2023 19:59:28 PAGE 2   
+
+  55          void Car_RightBack()//原地向后右拐
+  56          {
+  57   1              Speed_B = 50;Speed_A = 20;
+  58   1              Right_go();             //Right_stop();
+  59   1              Left_back();
+  60   1      }
+  61          
+  62          void Timer0_Routine () interrupt 1
+  63          {
+  64   1              static unsigned int T0count1,T0count2;      
+  65   1      
+  66   1              TL0 = 0xA4;                                      //Ensure that the interrupt time is constant
+  67   1              TH0 = 0xFF;     
+  68   1              //Adjust the speed of the right wheel
+  69   1              T0count1++;
+  70   1              if(T0count1 == 100)              //Come in every 100 微秒
+  71   1              {
+  72   2                      T0count1=0;
+  73   2              }
+  74   1              if(T0count1 <= Speed_A)
+  75   1              {
+  76   2                      ENA = 1;
+  77   2                      //ENB = 1;
+  78   2              }
+  79   1              else
+  80   1              {
+  81   2                      ENA = 0;
+  82   2                      //ENB = 0;
+  83   2              }
+  84   1              T0count2++;
+  85   1              if(T0count2 == 100)              //Come in every 100 微秒
+  86   1              {
+  87   2                      T0count2=0;
+  88   2              }
+  89   1              if(T0count2 <= Speed_B)
+  90   1              {
+  91   2                      ENB = 1;
+  92   2              }
+  93   1              else
+  94   1              {
+  95   2                      ENB = 0;
+  96   2              }
+  97   1      
+  98   1      }
+  99          
+ 100          
+ 101          
+ 102          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    168    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      6    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

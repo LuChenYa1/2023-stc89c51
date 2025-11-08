@@ -1,0 +1,120 @@
+C51 COMPILER V9.59.0.0   TRACK                                                             04/16/2024 22:22:14 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE TRACK
+OBJECT MODULE PLACED IN .\Objects\Track.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE Track.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\Tra
+                    -ck.lst) OBJECT(.\Objects\Track.obj)
+
+line level    source
+
+   1          #include <REGX51.H>
+   2          #include "car.h"
+   3          #include "INTRINS.h"
+   4          sbit Right  = P2^0; 
+   5          sbit Centure= P2^1;
+   6          sbit Left   = P2^2;
+   7          
+   8          #define BLACK 1
+   9          #define WHITE 0
+  10          
+  11          //charState;
+  12          
+  13          
+  14          /**
+  15            * @brief  ¶ÁÈ¡µ±Ç°×´Ì¬Âë
+  16            * @param  ÎÞ
+  17            * @retval ×´Ì¬Âë£ºState
+  18            */
+  19          void read_sensor_values()
+  20          {
+  21   1      //      if(Right == WHITE&&Centure == BLACK&&Left == WHITE)State = 0;//Ö±Ïß
+  22   1      //      if(Right == BLACK&&Centure == WHITE&&Left == BLACK)State = 0;//Ö±Ïß
+  23   1      //      if(Right == BLACK&&Centure == WHITE&&Left == WHITE)State = 1;//ÓÒÆ«
+  24   1      //      if(Right == BLACK&&Centure == BLACK&&Left == WHITE)State = 1;//ÓÒÆ«
+  25   1      //      if(Right == WHITE&&Centure == WHITE&&Left == BLACK)State = -1;//×óÆ«
+  26   1      //      if(Right == WHITE&&Centure == BLACK&&Left == BLACK)State = -1;//×óÆ«
+  27   1      //      if(Right == WHITE&&Centure == WHITE&&Left == WHITE)State =  2;//Í£Ö¹
+  28   1      //      return State;
+  29   1              
+  30   1              if(Right == WHITE&&Centure == BLACK&&Left == WHITE) 
+  31   1              {
+  32   2                      Car_Go();
+  33   2              }       //Ö±Ïß
+  34   1              if(Right == BLACK&&Centure == WHITE&&Left == BLACK)
+  35   1              {
+  36   2                      Car_Go();
+  37   2              }               //Ö±Ïß
+  38   1              /****************************************************/
+  39   1              
+  40   1              if(Right == BLACK&&Centure == WHITE&&Left == WHITE)
+  41   1              {
+  42   2      //              Car_Back();
+  43   2      //              delay(10);
+  44   2                      Car_RightGo();
+  45   2                      if(Right == WHITE&&Centure == WHITE&&Left == WHITE)     Car_Go();
+  46   2              }               //ÓÒÆ«
+  47   1              if(Right == BLACK&&Centure == BLACK&&Left == WHITE)
+  48   1              {
+  49   2                      Car_RightGo();
+  50   2                      if(Right == WHITE&&Centure == WHITE&&Left == WHITE)     Car_Go();
+  51   2              }               //ÓÒÆ«
+  52   1              /****************************************************/
+  53   1              
+  54   1              if(Right == WHITE&&Centure == WHITE&&Left == BLACK)
+C51 COMPILER V9.59.0.0   TRACK                                                             04/16/2024 22:22:14 PAGE 2   
+
+  55   1              {
+  56   2                      Car_LeftGo();
+  57   2                      if(Right == WHITE&&Centure == WHITE&&Left == WHITE)     Car_Go();
+  58   2              }               //×óÆ«
+  59   1              if(Right == WHITE&&Centure == BLACK&&Left == BLACK)
+  60   1              {       
+  61   2                      Car_LeftGo();
+  62   2                      if(Right == WHITE&&Centure == WHITE&&Left == WHITE)     Car_Go();
+  63   2              }               //×óÆ«
+  64   1              /***************************************************/
+  65   1              //Ö±½Ç×ó¹Õ¡¢Ö±½ÇÓÒ¹Õ£¬ÈýÂ·²»ÐÐ
+  66   1              if(Right == WHITE&&Centure == WHITE&&Left == WHITE)Car_Stop(); //Í£Ö¹
+  67   1      }
+  68          
+  69          
+  70          // /**
+  71          //   * @brief  ¾ùÖµÂË²¨£¬¼õÉÙÎó²î
+  72          //   * @param  ÎÞ
+  73          //   * @retval State_average
+  74          //   */
+  75          //   charget_average()
+  76          //{
+  77          //      floatState_sum,State_average;
+  78          //      charState_i[5],i,result;
+  79          //      for(i=0;i<5;i++)
+  80          //      {
+  81          //              State_i[i] = read_sensor_values();
+  82          //      }
+  83          //      for(i=0;i<5;i++)
+  84          //      {
+  85          //              State_sum += State_i[i];
+  86          //      }
+  87          //      State_average = State_sum/5;
+  88          //      if(-0.5 < State_average && State_average <= 0.5) result = 0;
+  89          //      if( 0.5 < State_average && State_average <= 1.5) result = 1;
+  90          //      if(-1.5 < State_average && State_average <= -0.5)result = -1;
+  91          //      if( 1.5 < State_average && State_average <= 2)   result = 2;
+  92          //      return result;
+  93          //}
+  94          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    133    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

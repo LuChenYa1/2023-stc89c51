@@ -1,0 +1,70 @@
+A51 MACRO ASSEMBLER  TEM4                                                                 10/26/2023 15:32:01 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.2.7.0
+OBJECT MODULE PLACED IN .\Objects\tem4.obj
+ASSEMBLER INVOKED BY: D:\Keil_v5\C51\BIN\A51.EXE tem4.asm SET(SMALL) DEBUG PRINT(.\Listings\tem4.lst) OBJECT(.\Objects\t
+                      em4.obj) EP
+
+LOC  OBJ            LINE     SOURCE
+
+                       1                             ;ORG   0000H
+                       2                             ;AJMP  MAIN;      …Ë÷√≥Ã–Úø™ º‘À––Œª÷√
+                       3                             ;ORG   0100H;     …Ë÷√≥Ã–Ú≥ı ºµÿ÷∑
+                       4                                     
+                       5     ;MAIN:          ;…Ë÷√≥ı º æ›
+                       6                             ;MOV   R0, #50H;  R0 <- 50H
+                       7                             ;MOV   @R0, #12H; (50H) <- 13H 
+                       8                             ;MOV   R0, #53H;  R0 <- 53H 
+                       9                             ;MOV   @R0, #34H; (53H) <- 26H 
+                      10                             ;INC   R0;        R0 <- R0 + 1  
+                      11                             ;MOV   @R0, #56H; (54H) <- 49H
+                      12                     
+                      13                             ;;“ª°¢≤◊÷£∫Ω´A÷–µƒ÷µ∏≥÷µ∏¯52H°¢51H£¨‘Ÿ∑÷±«Â¡„
+                      14                             ;MOV   A, 50H;    A <- (50H)
+                      15                             ;MOV   52H, A;    (52H) <- A
+                      16                             ;SWAP  A;        AH <-> AL
+                      17                             ;MOV   51H, A;    (51H) <- A
+                      18                             ;ANL   52H, #0FH;  52H∏ﬂŒª«Â¡„
+                      19                             ;ANL   51H, #0FH;  51H∏ﬂŒª«Â¡„
+                      20                             
+                      21                             ;;∂˛°¢∫œ◊÷£∫∞—53H°¢54HµƒµÕŒª∏≥÷µ∏¯55Hµƒ∏ﬂµÕŒª
+                      22                             ;MOV   A, 53H;    A <- (53H)
+                      23                             ;SWAP  A;         AH <-> AL
+                      24                             ;ANL   A, #0F0H;  AµÕŒª«Â¡„
+                      25                             ;MOV   55H, A;    (55H) <- A
+                      26                             ;MOV   A, 54H;    A <- (54H)
+                      27                             ;ANL   A, #0FH;   A∏ﬂŒª«Â¡„
+                      28                             ;ORL   55H, A ;   (55H) <- (55H) | A
+                      29                             
+                      30                             ;;Àƒ°¢”Î99H±»Ωœ£¨∏˘æ›Ω·π˚∑≈‘⁄≤ªÕ¨ƒ⁄¥Êµ•‘™
+                      31                             ;MOV   A, 55H;    A <- (55H)
+                      32                         ;CJNE  A, #99H, IfNotEqual;∞—A∫Õ99HΩ¯––±»Ωœ£¨≤ªœ‡µ»æÕÃ¯◊™
+                      33                         ;MOV   60H, A;    (60H) <- A
+                      34                         ;SJMP  Finish;    Ã¯◊™Ω· ¯”Ôæ‰£¨∑¿÷πºÃ–¯œÚœ¬÷¥––≤ª±ÿ“™µƒ√¸¡Ó
+                      35                             
+                      36     ;IfNotEqual: JNB   PSW.7, If99HSmall; CY == 1Ã¯◊™£¨¥À ±A <= 99H
+                      37                             ;MOV   61H, A;    (61H) <- A
+                      38                             ;SJMP  Finish;    Ã¯◊™Ω· ¯”Ôæ‰£¨∑¿÷πºÃ–¯œÚœ¬÷¥––≤ª±ÿ“™µƒ√¸¡Ó
+                      39                             
+                      40     ;If99HSmall: MOV   62H, A;  (62H) <- A
+                      41                             ;SJMP  Finish;    Ã¯◊™Ω· ¯”Ôæ‰£¨∑¿÷πºÃ–¯œÚœ¬÷¥––≤ª±ÿ“™µƒ√¸¡Ó
+                      42                             ;;Ω· ¯√¸¡Ó––
+                      43     ;Finish:            SJMP  $
+                      44                             ;END
+                      45                                     
+*** WARNING #A41 IN 45 (tem4.asm, LINE 45): MISSING 'END' STATEMENT
+A51 MACRO ASSEMBLER  TEM4                                                                 10/26/2023 15:32:01 PAGE     2
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  1 WARNING(S), 0 ERROR(S)

@@ -1,0 +1,1 @@
+"car.c" OPTIMIZE (8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\car.lst) OBJECT(.\Objects\car.obj)

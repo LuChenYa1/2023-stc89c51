@@ -1,0 +1,157 @@
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                    10/31/2023  15:38:33  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.22.2.0, INVOKED BY:
+D:\KEIL_V5\C51\BIN\BL51.EXE .\Objects\main.obj, .\Objects\delay.obj, .\Objects\tem.obj, .\Objects\tem1.obj, .\Objects\te
+>> m2.obj, .\Objects\tem3.obj, .\Objects\tem4.obj, .\Objects\tem5.obj, .\Objects\TeamWork.obj, .\Objects\Key.obj, .\Obje
+>> cts\MIAN_NEW.obj, .\Objects\sort.obj TO .\Objects\project PRINT (.\Listings\project.m51)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  .\Objects\main.obj (MAIN)
+  .\Objects\delay.obj (DELAY)
+  .\Objects\tem.obj (TEM)
+  .\Objects\tem1.obj (TEM1)
+  .\Objects\tem2.obj (TEM2)
+  .\Objects\tem3.obj (TEM3)
+  .\Objects\tem4.obj (TEM4)
+  .\Objects\tem5.obj (TEM5)
+  .\Objects\TeamWork.obj (TEAMWORK)
+  .\Objects\Key.obj (KEY)
+  .\Objects\MIAN_NEW.obj (MIAN_NEW)
+  .\Objects\sort.obj (SORT)
+
+
+LINK MAP OF MODULE:  .\Objects\project (MAIN)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     015BH     ABSOLUTE     
+
+
+
+OVERLAY MAP OF MODULE:   .\Objects\project (MAIN)
+
+
+SEGMENT
+  +--> CALLED SEGMENT
+---------------------
+
+
+SYMBOL TABLE OF MODULE:  .\Objects\project (MAIN)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        MAIN
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  -------         ENDMOD        MAIN
+
+  -------         MODULE        DELAY
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  -------         ENDMOD        DELAY
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  10/31/2023  15:38:33  PAGE 2
+
+
+
+  -------         MODULE        TEM
+  -------         ENDMOD        TEM
+
+  -------         MODULE        TEM1
+  -------         ENDMOD        TEM1
+
+  -------         MODULE        TEM2
+  -------         ENDMOD        TEM2
+
+  -------         MODULE        TEM3
+  -------         ENDMOD        TEM3
+
+  -------         MODULE        TEM4
+  -------         ENDMOD        TEM4
+
+  -------         MODULE        TEM5
+  -------         ENDMOD        TEM5
+
+  -------         MODULE        TEAMWORK
+  -------         ENDMOD        TEAMWORK
+
+  -------         MODULE        KEY
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  -------         ENDMOD        KEY
+
+  -------         MODULE        MIAN_NEW
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  -------         ENDMOD        MIAN_NEW
+
+  -------         MODULE        SORT
+  D:00F0H         SYMBOL        B
+  C:0150H         SYMBOL        EXCHANGE
+  C:015AH         SYMBOL        FINISH
+  C:0142H         SYMBOL        INTERRECYCLE
+  C:0130H         SYMBOL        LOOP1
+  C:0137H         SYMBOL        LOOP2
+  C:0100H         SYMBOL        MAIN
+  C:014BH         SYMBOL        NOTEQUAL
+  C:0149H         SYMBOL        OVER
+  D:00D0H         SYMBOL        PSW
+  C:012EH         SYMBOL        SORT
+  C:0154H         SYMBOL        _HUHUAN
+  C:0000H         LINE#         2
+  C:0100H         LINE#         6
+  C:0103H         LINE#         7
+  C:0106H         LINE#         8
+  C:0109H         LINE#         9
+  C:010CH         LINE#         10
+  C:010FH         LINE#         11
+  C:0112H         LINE#         12
+  C:0115H         LINE#         13
+  C:0118H         LINE#         14
+  C:011BH         LINE#         15
+  C:011EH         LINE#         16
+  C:0121H         LINE#         19
+  C:0123H         LINE#         20
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  10/31/2023  15:38:33  PAGE 3
+
+
+  C:0126H         LINE#         21
+  C:0128H         LINE#         22
+  C:012AH         LINE#         23
+  C:012CH         LINE#         24
+  C:012EH         LINE#         29
+  C:0130H         LINE#         33
+  C:0132H         LINE#         34
+  C:0134H         LINE#         35
+  C:0137H         LINE#         38
+  C:0138H         LINE#         39
+  C:013AH         LINE#         40
+  C:013CH         LINE#         41
+  C:013DH         LINE#         42
+  C:013FH         LINE#         43
+  C:0142H         LINE#         45
+  C:0144H         LINE#         46
+  C:0147H         LINE#         47
+  C:0149H         LINE#         48
+  C:014BH         LINE#         50
+  C:014EH         LINE#         51
+  C:0150H         LINE#         53
+  C:0152H         LINE#         54
+  C:0154H         LINE#         57
+  C:0157H         LINE#         58
+  C:0158H         LINE#         59
+  C:0159H         LINE#         60
+  C:015AH         LINE#         62
+  -------         ENDMOD        SORT
+
+*** WARNING L10: CANNOT DETERMINE ROOT SEGMENT
+
+Program Size: data=8.0 xdata=0 code=347
+LINK/LOCATE RUN COMPLETE.  1 WARNING(S),  0 ERROR(S)

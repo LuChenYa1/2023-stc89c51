@@ -1,0 +1,1 @@
+"TeamWork.asm" SET (SMALL) DEBUG PRINT(.\Listings\TeamWork.lst) OBJECT(.\Objects\TeamWork.obj) EP

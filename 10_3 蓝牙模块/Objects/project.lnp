@@ -1,0 +1,6 @@
+".\Objects\main.obj",
+".\Objects\UART.obj",
+".\Objects\delay.obj",
+".\Objects\nixie.obj" 
+TO ".\Objects\project" 
+PRINT(".\Listings\project.m51") DISABLEWARNING (16) 

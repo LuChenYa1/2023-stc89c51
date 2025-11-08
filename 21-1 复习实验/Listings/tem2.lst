@@ -1,0 +1,40 @@
+A51 MACRO ASSEMBLER  TEM2                                                                 10/26/2023 15:32:01 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.2.7.0
+OBJECT MODULE PLACED IN .\Objects\tem2.obj
+ASSEMBLER INVOKED BY: D:\Keil_v5\C51\BIN\A51.EXE tem2.asm SET(SMALL) DEBUG PRINT(.\Listings\tem2.lst) OBJECT(.\Objects\t
+                      em2.obj) EP
+
+LOC  OBJ            LINE     SOURCE
+
+                       1              ;ORG    0000H
+                       2              ;AJMP   MAIN
+                       3              ;ORG    0100H
+                       4              ;RS EQU 30H
+                       5     ;MAIN:MOV A, #7BH
+                       6              ;MOV B, #100
+                       7              ;DIV AB
+                       8              ;MOV RS, A
+                       9              ;MOV A, B
+                      10              ;MOV B, #10
+                      11              ;DIV AB
+                      12              ;MOV RS+1, A
+                      13              ;MOV RS+2, B
+                      14              ;END
+                      15             
+*** WARNING #A41 IN 15 (tem2.asm, LINE 15): MISSING 'END' STATEMENT
+A51 MACRO ASSEMBLER  TEM2                                                                 10/26/2023 15:32:01 PAGE     2
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  1 WARNING(S), 0 ERROR(S)

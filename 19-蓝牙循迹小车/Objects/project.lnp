@@ -1,0 +1,9 @@
+".\Objects\main.obj",
+".\Objects\Timer0_Init.obj",
+".\Objects\motor.obj",
+".\Objects\car.obj",
+".\Objects\UART.obj",
+".\Objects\Track.obj",
+".\Objects\delay.obj" 
+TO ".\Objects\project" 
+PRINT(".\Listings\project.m51") DISABLEWARNING (16) 

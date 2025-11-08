@@ -1,0 +1,81 @@
+C51 COMPILER V9.59.0.0   SERVO                                                             12/29/2023 20:49:05 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE SERVO
+OBJECT MODULE PLACED IN .\Objects\Servo.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE Servo.c LARGE OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listin
+                    -gs\Servo.lst) OBJECT(.\Objects\Servo.obj)
+
+line level    source
+
+   1          #include <REGX51.H>
+   2          #include "MatrixKey.h"
+   3          #include "delay.h"
+   4          
+   5          #define uint8_t unsigned char
+   6          sbit PWM_Servo = P0^7;
+   7          
+   8          uint8_t Angle;
+   9          
+  10          void contral_0(void)
+  11          {
+  12   1              Angle = 0;   
+  13   1              Delay_ms(20);
+  14   1      }
+  15          void contral_4(void)
+  16          {
+  17   1              Angle = 4;   
+  18   1              Delay_ms(20);
+  19   1      }void contral_1(void)
+  20          {
+  21   1              Angle = 1;   
+  22   1              Delay_ms(20);
+  23   1      }
+  24          
+  25          //定时中断函数
+  26          void Timer0_Routine () interrupt 1
+  27          {
+  28   1              static unsigned int T0count1, T0count2;//静态局部变量
+  29   1      
+  30   1              TL0 = 0x33;                                  //重新赋初值
+  31   1              TH0 = 0xFE;     
+  32   1              
+  33   1              //舵机转动
+  34   1              T0count1++;
+  35   1              if(T0count1 == 40)           //0.5ms * 40 = 20ms
+  36   1              {
+  37   2                      T0count1 = 0;
+  38   2              }
+  39   1              if(T0count1 <= Angle)
+  40   1              {
+  41   2                       PWM_Servo = 1;
+  42   2              }
+  43   1              else
+  44   1              {
+  45   2                       PWM_Servo = 0;
+  46   2              }
+  47   1              //定时器扫描矩阵键盘
+  48   1              T0count2++;
+  49   1              if(T0count2 == 100)           //0.5ms * 100 = 50ms
+  50   1              {
+  51   2                      T0count2 = 0;
+  52   2                      MatrixKey_Loop();
+  53   2              }
+  54   1      }
+C51 COMPILER V9.59.0.0   SERVO                                                             12/29/2023 20:49:05 PAGE 2   
+
+  55                  
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    191    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =      5    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

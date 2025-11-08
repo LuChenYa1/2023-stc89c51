@@ -1,0 +1,103 @@
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                    07/17/2023  11:22:27  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.22.2.0, INVOKED BY:
+D:\KEIL_V5\C51\BIN\BL51.EXE .\Objects\main.obj TO .\Objects\project PRINT (.\Listings\project.m51)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  .\Objects\main.obj (MAIN)
+  D:\KEIL_V5\C51\LIB\C51S.LIB (?C_STARTUP)
+  D:\KEIL_V5\C51\LIB\C51S.LIB (?C_INIT)
+
+
+LINK MAP OF MODULE:  .\Objects\project (MAIN)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     0011H     UNIT         ?DT?MAIN
+            IDATA   0019H     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+            CODE    0003H     008CH     UNIT         ?C_C51STARTUP
+            CODE    008FH     0063H     UNIT         ?PR?_NIXIE?MAIN
+            CODE    00F2H     0014H     UNIT         ?C_INITSEG
+            CODE    0106H     0011H     UNIT         ?PR?MAIN?MAIN
+
+
+
+OVERLAY MAP OF MODULE:   .\Objects\project (MAIN)
+
+
+SEGMENT
+  +--> CALLED SEGMENT
+---------------------
+?C_C51STARTUP
+  +--> ?PR?MAIN?MAIN
+  +--> ?C_INITSEG
+
+?PR?MAIN?MAIN
+  +--> ?PR?_NIXIE?MAIN
+
+
+
+SYMBOL TABLE OF MODULE:  .\Objects\project (MAIN)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        MAIN
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0080H         PUBLIC        P0
+  B:00B0H.1       PUBLIC        P3_1
+  B:00A0H.2       PUBLIC        P2_2
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  07/17/2023  11:22:27  PAGE 2
+
+
+  B:00A0H.3       PUBLIC        P2_3
+  B:00A0H.4       PUBLIC        P2_4
+  C:008FH         PUBLIC        _nixie
+  C:0106H         PUBLIC        main
+  D:0008H         PUBLIC        xianshi
+  -------         PROC          _NIXIE
+  D:0007H         SYMBOL        location
+  D:0004H         SYMBOL        number
+  C:008FH         LINE#         5
+  C:008FH         LINE#         6
+  C:008FH         LINE#         7
+  C:00BCH         LINE#         8
+  C:00BCH         LINE#         9
+  C:00C0H         LINE#         10
+  C:00C4H         LINE#         11
+  C:00C8H         LINE#         12
+  C:00CCH         LINE#         13
+  C:00D4H         LINE#         14
+  C:00DCH         LINE#         15
+  C:00E4H         LINE#         16
+  C:00EAH         LINE#         17
+  C:00EAH         LINE#         18
+  C:00F1H         LINE#         19
+  -------         ENDPROC       _NIXIE
+  -------         PROC          MAIN
+  C:0106H         LINE#         20
+  C:0106H         LINE#         21
+  C:0106H         LINE#         22
+  C:0106H         LINE#         23
+  C:0106H         LINE#         24
+  C:0109H         LINE#         25
+  C:0109H         LINE#         26
+  C:010CH         LINE#         27
+  C:0115H         LINE#         28
+  -------         ENDPROC       MAIN
+  -------         ENDMOD        MAIN
+
+Program Size: data=26.0 xdata=0 code=279
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)

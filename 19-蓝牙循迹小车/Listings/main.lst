@@ -1,0 +1,78 @@
+C51 COMPILER V9.59.0.0   MAIN                                                              04/16/2024 22:22:14 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\main
+                    -.lst) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include <REGX51.H>
+   2          #include "car.h"
+   3          #include "UART.h"
+   4          #include "Timer0_Init.h"
+   5          #include "Track.h"
+   6          #include "motor.h"
+   7          
+   8          unsigned char BlueToothValue,RunFlag;
+   9          char Result;
+  10          void main ()
+  11          {
+  12   1      //      UART_Init();
+  13   1      //      Timer0_Init();
+  14   1      
+  15   1          while(1)
+  16   1              { 
+  17   2      //              if(RunFlag ==1)
+  18   2      //              {
+  19   2      //                      read_sensor_values();
+  20   2      //              }
+  21   2                      ENB = 1;
+  22   2                      left1 = 0;
+  23   2                      left2 = 1;
+  24   2              }
+  25   1      }
+  26          
+  27           
+  28          void UART_Routine()   interrupt 4  
+  29          {
+  30   1              if(RI==1)                      
+  31   1              {
+  32   2                      RI=0;                     //手动复位 
+  33   2                      BlueToothValue=SBUF;
+  34   2                      UART_SendByte(BlueToothValue);
+  35   2                      switch(BlueToothValue)
+  36   2                      {
+  37   3                              case 0x01:RunFlag = 1;break;//开始循迹,停止蓝牙
+  38   3                              case 0x02:RunFlag = 2;Car_Stop();break;//停止循迹，开始蓝牙
+  39   3      //                      case 0x03: 
+  40   3      //                      case 0x04: 
+  41   3      //                      case 0x05: 
+  42   3                              
+  43   3                              case 0x07:Car_Go();break;
+  44   3                              case 0x08:Car_LeftGo();break;
+  45   3                              case 0x09:Car_Stop();break;
+  46   3                              case 0x10:Car_RightGo();break;
+  47   3                              case 0x11:Car_Back();break;
+  48   3                      } 
+  49   2              }
+  50   1      }
+  51          
+  52           
+
+
+C51 COMPILER V9.59.0.0   MAIN                                                              04/16/2024 22:22:14 PAGE 2   
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    137    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      3    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

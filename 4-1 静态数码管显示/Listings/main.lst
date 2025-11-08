@@ -1,0 +1,56 @@
+C51 COMPILER V9.59.0.0   MAIN                                                              07/17/2023 11:22:27 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\main
+                    -.lst) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include <REGX51.H>
+   2          
+   3          unsigned char xianshi[]={0x3f,0x06,0x5b,0x4f,0x66,0x6d,0x7d,0x07,0x7f,0x6f,0x77,0x7c,0x39,0x5e,0x79,0x71,0
+             -x00};
+   4          
+   5          void nixie(unsigned char location,number)
+   6          {
+   7   1                      switch( location)
+   8   1                      {
+   9   2                              case 8:P2_4=1;P2_3=1;P2_2=1;break;//从左到右，对应87654321
+  10   2                              case 7:P2_4=1;P2_3=1;P2_2=0;break;
+  11   2                              case 6:P2_4=1;P2_3=0;P2_2=1;break;
+  12   2                              case 5:P2_4=1;P2_3=0;P2_2=0;break;
+  13   2                              case 4:P2_4=0;P2_3=1;P2_2=1;break;
+  14   2                              case 3:P2_4=0;P2_3=1;P2_2=0;break;
+  15   2                              case 2:P2_4=0;P2_3=0;P2_2=1;break;
+  16   2                              case 1:P2_4=0;P2_3=0;P2_2=0;break;
+  17   2                      }
+  18   1                      P0=xianshi[number];
+  19   1      }
+  20          void main()             //按下第一个键，第六位显示 5
+  21          {
+  22   1              while(1)
+  23   1              {
+  24   2                      while(P3_1==0)
+  25   2                      {
+  26   3                              while(P3_1==0);
+  27   3                              nixie(6,5);
+  28   3                      }
+  29   2                      
+  30   2              }
+  31   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    116    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     17    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

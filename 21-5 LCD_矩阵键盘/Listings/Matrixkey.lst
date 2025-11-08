@@ -1,0 +1,177 @@
+C51 COMPILER V9.59.0.0   MATRIXKEY                                                         11/20/2023 16:02:11 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE MATRIXKEY
+OBJECT MODULE PLACED IN .\Objects\Matrixkey.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE Matrixkey.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings
+                    -\Matrixkey.lst) OBJECT(.\Objects\Matrixkey.obj)
+
+line level    source
+
+   1          //#include <REGX51.H>
+   2          //#include <delay.h>
+   3          // 
+   4          // /**
+   5          //  * @brief  矩阵键盘读取按键键码
+   6          //  * @param  参数无
+   7          //  * @retval 返回值为键码
+   8          //      按下并松开后重新赋值并显示
+   9          //  */  
+  10          //unsigned char MatrixKey()
+  11          // {
+  12          //       //列扫描
+  13          //       unsigned char KeyNum = 0;
+  14          //       P1=0xff;
+  15          //       P1_0=0;      //确定扫描列数          
+  16          //       if(P1_4==0){delay_ms(20);while(P1_4==0);delay_ms(20);KeyNum=16;}
+  17          //       if(P1_5==0){delay_ms(20);while(P1_5==0);delay_ms(20);KeyNum=12;}
+  18          //       if(P1_6==0){delay_ms(20);while(P1_6==0);delay_ms(20);KeyNum=8;}
+  19          //       if(P1_7==0){delay_ms(20);while(P1_7==0);delay_ms(20);KeyNum=4;}
+  20          //       
+  21          //       
+  22          //       P1=0xff;
+  23          //       P1_1=0;
+  24          //       if(P1_4==0){delay_ms(20);while(P1_4==0);delay_ms(20);KeyNum=15;}
+  25          //       if(P1_5==0){delay_ms(20);while(P1_5==0);delay_ms(20);KeyNum=11;}
+  26          //       if(P1_6==0){delay_ms(20);while(P1_6==0);delay_ms(20);KeyNum=7;}
+  27          //       if(P1_7==0){delay_ms(20);while(P1_7==0);delay_ms(20);KeyNum=3;}
+  28          //       
+  29          //       P1=0xff;
+  30          //       P1_2=0;
+  31          //       if(P1_4==0){delay_ms(20);while(P1_4==0);delay_ms(20);KeyNum=14;}
+  32          //       if(P1_5==0){delay_ms(20);while(P1_5==0);delay_ms(20);KeyNum=10;}
+  33          //       if(P1_6==0){delay_ms(20);while(P1_6==0);delay_ms(20);KeyNum=6;}
+  34          //       if(P1_7==0){delay_ms(20);while(P1_7==0);delay_ms(20);KeyNum=2;}
+  35          //       
+  36          //       P1=0xff;
+  37          //       P1_3=0;
+  38          //       if(P1_4==0){delay_ms(20);while(P1_4==0);delay_ms(20);KeyNum=13;}
+  39          //       if(P1_5==0){delay_ms(20);while(P1_5==0);delay_ms(20);KeyNum=9;}
+  40          //       if(P1_6==0){delay_ms(20);while(P1_6==0);delay_ms(20);KeyNum=5;}
+  41          //       if(P1_7==0){delay_ms(20);while(P1_7==0);delay_ms(20);KeyNum=1;}
+  42          //       
+  43          //       
+  44          //       return KeyNum;
+  45          // }
+  46          
+  47          // unsigned char MatrixKey()
+  48          // {
+  49          //       //列扫描
+  50          //       unsigned char KeyNum, temp1, temp2;
+  51          //       P1=0xf0;
+  52          //       ...
+  53          //       temp1 = P1;
+  54          //       P1 = 0x0f;
+C51 COMPILER V9.59.0.0   MATRIXKEY                                                         11/20/2023 16:02:11 PAGE 2   
+
+  55          //       ...
+  56          //       temp2 = P1;
+  57          //       keyNum = temp1 | temp2;
+  58          //       
+  59          //       
+  60          //       return KeyNum;
+  61          // }
+  62          
+  63          
+  64           #include <REGX51.H>
+  65           #include <delay.h>
+  66           
+  67           //定时器扫描矩阵键盘
+  68           unsigned char Scan_MatrixKeyNum;
+  69           /**
+  70            * @brief  矩阵键盘读取按键键码
+  71            * @param  无
+  72            * @retval 键码KeyNum
+  73                  按下并松开后重新赋值并显示
+  74            */  
+  75          unsigned char Matrixkey_GetState()
+  76           {
+  77   1               //列扫描
+  78   1               unsigned char MatrixKeyNum = 0;//这一步赋值0很重要，不能省略
+  79   1               P1=0xff;     //全部复位
+  80   1               P1_0=0;      //确定扫描列数          
+  81   1               if(P1_4==0){MatrixKeyNum=16;}
+  82   1               if(P1_5==0){MatrixKeyNum=12;}
+  83   1               if(P1_6==0){MatrixKeyNum=8;}
+  84   1               if(P1_7==0){MatrixKeyNum=4;}
+  85   1               
+  86   1               
+  87   1               P1=0xff;
+  88   1               P1_1=0;
+  89   1               if(P1_4==0){MatrixKeyNum=15;}
+  90   1               if(P1_5==0){MatrixKeyNum=11;}
+  91   1               if(P1_6==0){MatrixKeyNum=7;}
+  92   1               if(P1_7==0){MatrixKeyNum=3;}
+  93   1               
+  94   1               P1=0xff;
+  95   1               P1_2=0;
+  96   1               if(P1_4==0){MatrixKeyNum=14;}
+  97   1               if(P1_5==0){MatrixKeyNum=10;}
+  98   1               if(P1_6==0){MatrixKeyNum=6;}
+  99   1               if(P1_7==0){MatrixKeyNum=2;}
+ 100   1               
+ 101   1               P1=0xff;
+ 102   1               P1_3=0;
+ 103   1               if(P1_4==0){MatrixKeyNum=13;}
+ 104   1               if(P1_5==0){MatrixKeyNum=9;}
+ 105   1               if(P1_6==0){MatrixKeyNum=5;}
+ 106   1               if(P1_7==0){MatrixKeyNum=1;}
+ 107   1                
+ 108   1               return MatrixKeyNum;
+ 109   1       }
+ 110          /**
+ 111            * @brief  中断时执行的函数，功能是检测按键落下并返回相应的值，去除了原来的delay和死循环
+ 112            * @param  无
+ 113            * @retval 无
+ 114            */
+ 115          void MatrixKey_Loop(void)
+ 116          {
+C51 COMPILER V9.59.0.0   MATRIXKEY                                                         11/20/2023 16:02:11 PAGE 3   
+
+ 117   1              static unsigned char laststate,nowstate;
+ 118   1              laststate = nowstate;
+ 119   1              nowstate = Matrixkey_GetState();
+ 120   1              //更换10位置可以按下即变，不需松手
+ 121   1              if(laststate==1&&nowstate==0)Scan_MatrixKeyNum = 1;     
+ 122   1              else if(laststate==2 && nowstate == 0)Scan_MatrixKeyNum = 2;    
+ 123   1              else if(laststate==3 && nowstate == 0)Scan_MatrixKeyNum = 3;    
+ 124   1              else if(laststate==4 && nowstate == 0)Scan_MatrixKeyNum = 4;    
+ 125   1              else if(laststate==5 && nowstate == 0)Scan_MatrixKeyNum = 5;    
+ 126   1              else if(laststate==6 && nowstate == 0)Scan_MatrixKeyNum = 6;    
+ 127   1              else if(laststate==7 && nowstate == 0)Scan_MatrixKeyNum = 7;    
+ 128   1              else if(laststate==8 && nowstate == 0)Scan_MatrixKeyNum = 8;    
+ 129   1              else if(laststate==9 && nowstate == 0)Scan_MatrixKeyNum = 9;    
+ 130   1              else if(laststate==10&& nowstate == 0)Scan_MatrixKeyNum = 10;   
+ 131   1              else if(laststate==11&& nowstate == 0)Scan_MatrixKeyNum = 11;   
+ 132   1              else if(laststate==12&& nowstate == 0)Scan_MatrixKeyNum = 12;   
+ 133   1              else if(laststate==13&& nowstate == 0)Scan_MatrixKeyNum = 13;   
+ 134   1              else if(laststate==14&& nowstate == 0)Scan_MatrixKeyNum = 14;   
+ 135   1              else if(laststate==15&& nowstate == 0)Scan_MatrixKeyNum = 15;   
+ 136   1              else if(laststate==16&& nowstate == 0)Scan_MatrixKeyNum = 16;   
+ 137   1      }
+ 138          /**
+ 139            * @brief  返回按键键码
+ 140            * @param  无
+ 141            * @retval 键码
+ 142            */
+ 143          unsigned char MatrixKey(void)
+ 144          {
+ 145   1              unsigned char temp;
+ 146   1              temp = Scan_MatrixKeyNum;     //返回按键值前对Scan_KeyNum清零,防止不按下时返回原值
+ 147   1              Scan_MatrixKeyNum = 0;
+ 148   1              return temp;
+ 149   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    356    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      3    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

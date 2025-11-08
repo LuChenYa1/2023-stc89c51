@@ -1,0 +1,282 @@
+C51 COMPILER V9.59.0.0   MAIN                                                              11/25/2023 17:06:33 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\main
+                    -.lst) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include <REGF51RC.H>
+   2          #include "Matrixkey.h"
+   3          #include "delay.h"
+   4          #include "nixie.h"
+   5          #include "Timer0_Init.h"
+   6          
+   7          #define Start 1
+   8          #define Stop  0
+   9          #define uint8_t  unsigned char 
+  10          uint8_t MatrixKeyNum, Mode, Time_Mode = 0, Count, NewState, OldState;
+  11          uint8_t State = 0, h = 23, f = 59, s = 56;
+  12          void Show0_F(void);
+  13          void Show_Time(void);
+  14          void Get_Mode(void);
+  15          void TimeSet(uint8_t  *TimeMode, Value);
+  16          void Show_Second(void);
+  17          void Show_Minute(void);
+  18          void Show_Hour(void);
+  19          
+  20          void main ()
+  21          {
+  22   1              nixie(8, 16);//硬件bug消除
+  23   1              Timer0_Init();
+  24   1          while(1)
+  25   1              {
+  26   2                      Get_Mode();//得到按键对应模式
+  27   2                      //Show_Time();//显示时间
+  28   2                      Show0_F();
+  29   2                      if(MatrixKeyNum == 10)State = !State;//按下一瞬间控制启停
+  30   2                      if(State == Stop)//进入暂停模式
+  31   2                      {
+  32   3                              if(MatrixKeyNum == 14)//选择要设置时间的位
+  33   3                              {
+  34   4                                      Time_Mode ++;
+  35   4                                      if(Time_Mode == 7)Time_Mode = 1;
+  36   4                              }
+  37   3                              //以下语句不能放在上面的if判断中，因为当时的Mode = 10,不满足条件，无法设置时间
+  38   3                              if(Time_Mode == 1 || Time_Mode == 2)//设置时
+  39   3                              {
+  40   4                                      if(Mode < 10)TimeSet(&h, Mode); 
+  41   4                              }
+  42   3                              else if(Time_Mode == 3 || Time_Mode == 4)//设置分
+  43   3                              {
+  44   4                                      if(Mode < 10)TimeSet(&f, Mode);
+  45   4                              }
+  46   3                              else if(Time_Mode == 5 || Time_Mode == 6)//设置秒
+  47   3                              {
+  48   4                                      if(Mode < 10)TimeSet(&s, Mode);
+  49   4                              }
+  50   3                              //判断时间是否越界
+  51   3                              if(h > 23)
+  52   3                              {
+  53   4                                      h = 0; Mode = 0;//特例：刷新键值，防止小时的个位显示原来的值
+  54   4                              }
+C51 COMPILER V9.59.0.0   MAIN                                                              11/25/2023 17:06:33 PAGE 2   
+
+  55   3                              if(f >= 60)f = 0;
+  56   3                              if(s >= 60)s = 0;
+  57   3                      }
+  58   2              }
+  59   1      }
+  60          
+  61          //根据数字按键设置时间
+  62          void TimeSet(uint8_t  *TimeMode, Value)
+  63          {
+  64   1              if(Time_Mode == 1 || Time_Mode == 3 || Time_Mode == 5)*TimeMode = *TimeMode % 10 + Value * 10;
+  65   1              else if(Time_Mode == 2 || Time_Mode == 4 || Time_Mode == 6)*TimeMode = *TimeMode / 10 *10 + Value;
+  66   1      }
+  67          
+  68          
+  69          //定时中断
+  70          void Timer0_Routine () interrupt 1
+  71          {
+  72   1              static unsigned int T0count1, T0count2;     //静态局部变量，保证不会被重新赋值
+  73   1      
+  74   1              TL0 = 0x66;                                       //确保中断时间不变
+  75   1              TH0 = 0xFC;     
+  76   1              T0count1++;
+  77   1              if(T0count1 == 900)               //每隔1秒进入if，灯亮灭变化
+  78   1              {
+  79   2                      T0count1 = 0;                 //这一句不小心被删掉了，导致浪费时间找bug
+  80   2                      if(State == Start)
+  81   2                      {
+  82   3                              if(Mode == 11)//顺计时
+  83   3                              {
+  84   4                                      s ++;
+  85   4                                      if(s == 60)
+  86   4                                      {
+  87   5                                              s = 0;
+  88   5                                              f ++;
+  89   5                                              if(f == 60)
+  90   5                                              {
+  91   6                                                      f = 0;
+  92   6                                                      h ++;
+  93   6                                                      if(h == 24) h = 0;
+  94   6                                              }
+  95   5                                      }
+  96   4                              }
+  97   3                              else if(Mode == 12)//倒计时
+  98   3                              {
+  99   4                                      s--;
+ 100   4                                      if(s == 255)
+ 101   4                                      {
+ 102   5                                              s = 59;
+ 103   5                                              f--;
+ 104   5                                              if(f == 255)
+ 105   5                                              {
+ 106   6                                                      f = 59;
+ 107   6                                                      h--;
+ 108   6                                                      if(h == 255)h = 23;
+ 109   6                                              }
+ 110   5                                      }                               
+ 111   4                              }
+ 112   3                              else if(Mode == 13)//清零
+ 113   3                              {
+ 114   4                                      h = 0; f = 0; s = 0;
+ 115   4                              }
+ 116   3                      }
+C51 COMPILER V9.59.0.0   MAIN                                                              11/25/2023 17:06:33 PAGE 3   
+
+ 117   2                      
+ 118   2              }
+ 119   1              T0count2 ++;
+ 120   1              if(T0count2 == 20)
+ 121   1              {
+ 122   2                      T0count2 = 0;
+ 123   2                      MatrixKey_Loop();
+ 124   2              }
+ 125   1      }
+ 126          
+ 127          //由按键得到模式，不被刷新为0
+ 128          void Get_Mode(void)
+ 129          {
+ 130   1              MatrixKeyNum = MatrixKey();
+ 131   1              if(MatrixKeyNum == 1)Mode = 1;
+ 132   1              else if(MatrixKeyNum == 2)Mode = 2;
+ 133   1              else if(MatrixKeyNum == 3)Mode = 3;
+ 134   1              else if(MatrixKeyNum == 4)Mode = 4;
+ 135   1              else if(MatrixKeyNum == 5)Mode = 5;
+ 136   1              else if(MatrixKeyNum == 6)Mode = 6;
+ 137   1              else if(MatrixKeyNum == 7)Mode = 7;
+ 138   1              else if(MatrixKeyNum == 8)Mode = 8;
+ 139   1              else if(MatrixKeyNum == 9)Mode = 9;
+ 140   1              //else if(MatrixKeyNum == 10)Mode = 10;
+ 141   1              else if(MatrixKeyNum == 11)Mode = 11;
+ 142   1              else if(MatrixKeyNum == 12)Mode = 12;
+ 143   1              else if(MatrixKeyNum == 13)Mode = 13;
+ 144   1              else if(MatrixKeyNum == 14)Mode = 14;
+ 145   1              else if(MatrixKeyNum == 15)Mode = 15;
+ 146   1              else if(MatrixKeyNum == 16)Mode = 0;
+ 147   1      }
+ 148          
+ 149          //显示时间
+ 150          void Show_Time(void)
+ 151          {
+ 152   1              nixie(3, 17);//显示分隔号
+ 153   1              nixie(6, 17);
+ 154   1              if(State == Start)//运行模式正常显示时间
+ 155   1              {
+ 156   2                      Show_Hour();
+ 157   2                      Show_Minute();
+ 158   2                      Show_Second();
+ 159   2              }
+ 160   1              else if(State == Stop)//达到闪烁效果
+ 161   1              {
+ 162   2                      if(Time_Mode == 1 || Time_Mode == 2)//时闪烁
+ 163   2                      {
+ 164   3                              Count ++;
+ 165   3                              Count %= 16;
+ 166   3                              if(Count > 10)Show_Hour();
+ 167   3                              else 
+ 168   3                              {
+ 169   4                                      nixie(1, 16);
+ 170   4                                      nixie(2, 16);
+ 171   4                              }
+ 172   3                              Show_Minute();
+ 173   3                              Show_Second();
+ 174   3                      }
+ 175   2                       if(Time_Mode == 3 || Time_Mode == 4)//分闪烁
+ 176   2                      {
+ 177   3                              Count ++;
+ 178   3                              Count %= 16;
+C51 COMPILER V9.59.0.0   MAIN                                                              11/25/2023 17:06:33 PAGE 4   
+
+ 179   3                              if(Count > 10)Show_Minute();
+ 180   3                              else 
+ 181   3                              {
+ 182   4                                      nixie(3, 16);
+ 183   4                                      nixie(4, 16);
+ 184   4                              }
+ 185   3                              Show_Hour();
+ 186   3                              Show_Second();
+ 187   3                      }
+ 188   2                      if(Time_Mode == 5 || Time_Mode == 6)//秒闪烁
+ 189   2                      {
+ 190   3                              Count ++;
+ 191   3                              Count %= 16;
+ 192   3                              if(Count < 10)Show_Second();
+ 193   3                              else 
+ 194   3                              {
+ 195   4                                      nixie(5, 16);
+ 196   4                                      nixie(6, 16);
+ 197   4                              }
+ 198   3                              Show_Hour();
+ 199   3                              Show_Minute();
+ 200   3                      }
+ 201   2                      if(Time_Mode == 0)
+ 202   2                      {
+ 203   3                              Show_Hour();
+ 204   3                              Show_Minute();
+ 205   3                              Show_Second();
+ 206   3                      }
+ 207   2              }
+ 208   1      }
+ 209          
+ 210          //显示时间代码封装
+ 211          void Show_Hour(void)
+ 212          {
+ 213   1              nixie(1, h /10);
+ 214   1              nixie(2, h % 10);       
+ 215   1      }
+ 216          
+ 217          void Show_Minute(void)
+ 218          {
+ 219   1              nixie(4, f /10);
+ 220   1              nixie(5, f % 10);       
+ 221   1      }
+ 222          
+ 223          void Show_Second(void)
+ 224          {
+ 225   1              nixie(7, s /10);
+ 226   1              nixie(8, s % 10);       
+ 227   1      }
+ 228          
+ 229          //由对应按键显示0~F
+ 230          void Show0_F(void)
+ 231          {
+ 232   1              if(Mode == 1)nixie(1, 1);
+ 233   1              else if(Mode == 2)nixie(1, 2);
+ 234   1              else if(Mode == 3)nixie(1, 3);
+ 235   1              else if(Mode == 4)nixie(1, 4);
+ 236   1              else if(Mode == 5)nixie(1, 5);
+ 237   1              else if(Mode == 6)nixie(1, 6);
+ 238   1              else if(Mode == 7)nixie(1, 7);
+ 239   1              else if(Mode == 8)nixie(1, 8);
+ 240   1              else if(Mode == 9)nixie(1, 9);
+C51 COMPILER V9.59.0.0   MAIN                                                              11/25/2023 17:06:33 PAGE 5   
+
+ 241   1              else if(Mode == 10)nixie(1, 10);
+ 242   1              else if(Mode == 11)nixie(1, 11);
+ 243   1              else if(Mode == 12)nixie(1, 12);
+ 244   1              else if(Mode == 13)nixie(1, 13);
+ 245   1              else if(Mode == 14)nixie(1, 14);
+ 246   1              else if(Mode == 15)nixie(1, 15);
+ 247   1              else if(Mode == 16)nixie(1, 0);
+ 248   1      }           
+ 249                      
+ 250                      
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1112    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     14    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

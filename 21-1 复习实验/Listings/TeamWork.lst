@@ -1,0 +1,91 @@
+A51 MACRO ASSEMBLER  TEAMWORK                                                             10/31/2023 15:28:29 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.2.7.0
+OBJECT MODULE PLACED IN .\Objects\TeamWork.obj
+ASSEMBLER INVOKED BY: D:\Keil_v5\C51\BIN\A51.EXE TeamWork.asm SET(SMALL) DEBUG PRINT(.\Listings\TeamWork.lst) OBJECT(.\O
+                      bjects\TeamWork.obj) EP
+
+LOC  OBJ            LINE     SOURCE
+
+                       1                               ;ORG  0000H
+                       2                               ;AJMP MAIN
+                       3                               ;ORG  0100H
+                       4     
+                       5     ;MAIN:         ;Ò»¡¢ÏÈ¸øÆ¬ÄÚRAM50H~5AHËæ»ú¸³Öµ
+                       6                               ;MOV   50H, #56H
+                       7                               ;MOV   51H, #50H
+                       8                               ;MOV   52H, #12H
+                       9                               ;MOV   53H, #78H
+                      10                               ;MOV   54H, #37H
+                      11                               ;MOV   55H, #89H
+                      12                               ;MOV   56H, #52H
+                      13                               ;MOV   57H, #04H
+                      14                               ;MOV   58H, #04H
+                      15                               ;MOV   59H, #29H
+                      16                               ;MOV   5AH, #67H
+                      17                             
+                      18                               ;;¶þ¡¢³õÊ¼»¯
+                      19                               ;MOV   R6, #0AH;               ÍâÑ­»·¿ØÖÆ´ÎÊ
+                      20                             
+                      21     ;LOOP1:           ;ÍâÑ­»·,ÏÂÃæÒÑ¾­ÓÐDJNZ£¬ËùÒÔÕâÀï²»ÐèÒª¶ÔÑ­»·´ÎÊ¼õÒ»
+                      22                               ;;×¢Òâ£¬½øÈëÄÚÑ­»·Ö®Ç°±ØÐë¶ÔÒÔÏÂÏà¹Ø²ÎÊÖØÐÂ³õÊ¼»¯
+                      23                               ;MOV   R0, #50H;               ³õÊ¼±È½ÏµØÖ·
+                      24                               ;MOV   R7, #0AH;               ÄÚÑ­»·¿ØÖÆ´ÎÊ
+                      25                               ;MOV   B, #00H;         ½«±êÖ¾Î»ÇåÁã,²»ÄÜÓÃCY×÷Îª±êÖ¾Î»£¬ËüÓÃÔÚÁË
+                             CJNEÖÐ
+                      26                               
+                      27     ;LOOP2:           ;ÄÚÑ­»·,ÏÂÃæÒÑ¾­ÓÐDJNZ£¬ËùÒÔÕâÀï²»ÐèÒª¶ÔÑ­»·´ÎÊ¼õÒ»
+                      28     
+                      29                               ;MOV   A, @R0;                 ½«Òª±È½Ï´óÐ¡µÄÇ°Õß¸³Öµ¸øA
+                      30                               ;MOV   20H, R0;                20H×÷ÎªÖÐ×ªÕ¾
+                      31                               ;MOV   R1, 20H ;        R1ÔÝ´æÇ°ÕßµØÖ·
+                      32                               ;INC   R0;                     R0´¢´æºóÕßµØÖ·
+                      33                               ;MOV   21H, @R0;               ½«Òª±È½Ï´óÐ¡µÄºóÕß¸³Öµ¸ø21H,ÒòÎªCJ
+                             NEÎÞ·¨ÓÃ@Rn
+                      34                               ;CJNE  A, 21H, NotEqual;ÁîÇ°ÕßºÍºóÕß±È½Ï£¬²»ÏàµÈÔòÌø×ªNotEqualÅÐ¶
+                             ÏÊÇ·ñ»»Î»
+                      35                               
+                      36     ;interrecycle: DJNZ  R7, LOOP2;          ÅÐ¶Ï9´ÎÄÚÑ­»·ÊÇ·ñÍê±Ï£¬Íê±Ï¾ÍÏòÏÂÔËÐÐ
+                      37                               ;DJNZ  B, OVER;         Èô±êÖ¾Î»BÎª0£¬Ö¤Ã÷ÅÅÐòÒÑ¾­Íê³É£¬²»ÔÙ½øÈëÍ
+                             âÑ­»·£¬Ìø×ª½øÈë½áÊøÐÐ
+                      38                               ;DJNZ  R6, LOOP1;              ÅÐ¶Ï9´ÎÍâÑ­»·ÊÇ·ñÍê±Ï£¬Íê±ÏÔòÍ£Ö¹Ô
+                             ËÐÐ
+                      39     ;OVER:            SJMP  Finish;                  ½áÊøÔËÐÐÃüÁî
+                      40                             
+                      41     ;NotEqual:     JNB   PSW.7, exchange; µ±Ç°Õß´óÓÚºóÕß£¬Ìø×ªÖ´ÐÐ»»Î»³ÌÐò_HuHuan
+                      42                               ;SJMP  interrecycle;    ²»Ìø×ªÔò½áÊøµ±´ÎÑ­»·£¬·µ»ØÅÐ¶ÏÄÚÑ­»·ÊÇ·ñ½
+                             áÊø
+                      43                             
+                      44     ;exchange:        ACALL _HuHuan;         µ÷ÓÃ»»Î»¹¦ÄÜ×Ó³ÌÐò
+                      45                               ;SJMP  interrecycle;    »»Î»Íê³É,½áÊøµ±´ÎÑ­»·£¬·µ»ØÅÐ¶ÏÄÚÑ­»·ÊÇ·ñ
+                             ½áÊø
+                      46                             
+                      47     ;_HuHuan:      ;°ÑÁ½¸öµØÖ·µÄÖµ»¥»»
+                      48                               ;MOV   B, #01H;         Ò»µ©·¢Éú½»»»£¬¾Í½«±êÖ¾Î»ÖÃÒ»
+                      49                               ;XCH   A, @R0;                         ½«AÖÐ°üº¬µÄÇ°ÕßºÍ(R0)Ö¸Ïòµ
+                             ÄºóÕß½øÐÐ»¥»»
+A51 MACRO ASSEMBLER  TEAMWORK                                                             10/31/2023 15:28:29 PAGE     2
+
+                      50                               ;MOV   @R1, A;          ½«AÖÐ°üº¬µÄºóÕß¸³Öµ¸øR1ÖÐÔÝ´æµÄÉÏÒ»Î»µØÖ·
+                      51                               ;RET;                                  ·µ»ØÖ÷³ÌÐò
+                      52                             
+                      53     ;Finish:                  SJMP  $;                               ½áÊøÖ¸Áî
+                      54                               ;END
+                      55                             
+                      56                             
+*** WARNING #A41 IN 56 (TeamWork.asm, LINE 56): MISSING 'END' STATEMENT
+A51 MACRO ASSEMBLER  TEAMWORK                                                             10/31/2023 15:28:29 PAGE     3
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  1 WARNING(S), 0 ERROR(S)

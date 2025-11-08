@@ -1,0 +1,65 @@
+A51 MACRO ASSEMBLER  TEM5                                                                 10/26/2023 15:32:01 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.2.7.0
+OBJECT MODULE PLACED IN .\Objects\tem5.obj
+ASSEMBLER INVOKED BY: D:\Keil_v5\C51\BIN\A51.EXE tem5.asm SET(SMALL) DEBUG PRINT(.\Listings\tem5.lst) OBJECT(.\Objects\t
+                      em5.obj) EP
+
+LOC  OBJ            LINE     SOURCE
+
+                       1     ;ORG  0000H
+                       2     ;AJMP MAIN
+                       3     ;ORG  0100H
+                       4     
+                       5     
+                       6     ;MAIN:          MOV    B, #10;    B <- 10£¬Ñ­»·¿ØÖÆ´ÎÊ
+                       7                             ;MOV    R1, #50H;  R1 <- 50H£¬ÊÁÐ1µÄÊ×µØÖ·
+                       8                             ;MOV    R0, #60H;  R0 <- 60H£¬ÊÁÐ2µÄÊ×µØÖ·
+                       9                             ;MOV    A, #12H;   A <- 12H£¬ÓÃÓÚÊÁÐ¸³Öµ
+                      10                             ;MOV   DPTR, #0100H;DPTR <- 0100H£¬Æ¬ÍâRAMÄ¿µÄµØÖ·
+                      11                             
+                      12     ;LOOP1:         MOV    @R1, A;    ½«A¸³Öµ¸øR1×°×ÅµÄµØÖ·ËùÖ¸ÏòµÄ¿Õ¼ä
+                      13                             ;INC    R1;        ÊÁÐ1µØÖ·¼ÓÒ»
+                      14                             ;ADD    A, #11H;   A += 11H£¬Ä¿µÄÊÇ¸÷¸öÊ¾Ý¸³Öµ²»Í¬
+                      15                             ;DJNZ   B, LOOP1;  Ñ­»·¿ØÖÆ´ÎÊ, --B Èô²»Îª0Ôò¼ÌÐøÑ­»·¸³Öµ
+                      16                             
+                      17                             ;MOV    B, #10;    ¸øBÖØÐÂ¸³Öµ
+                      18                             
+                      19     ;LOOP2:         MOV    @R0, A;    ½«A¸³Öµ¸øR1×°×ÅµÄµØÖ·ËùÖ¸ÏòµÄ¿Õ¼ä
+                      20                             ;INC    R0;        ÊÁÐ2µØÖ·¼ÓÒ»
+                      21                             ;ADD    A, #14H;   A += 11H£¬Ä¿µÄÊÇ¸÷¸öÊ¾Ý¸³Öµ²»Í¬
+                      22                             ;DJNZ   B, LOOP2;  Ñ­»·¿ØÖÆÌõ¼þ, --B Èô²»Îª0Ôò¼ÌÐøÑ­»·¸³Öµ
+                      23                             
+                      24                             ;MOV    R0, #60H;  R0 <- 60H,¸øR0ÖØÐÂ¸³Öµ
+                      25                             ;MOV    R1, #50H;  R1 <- 50H,¸øR1ÖØÐÂ¸³Öµ
+                      26                             
+                      27     ;LOOP3:         MOV    A, @R1;    ½«R1×°×ÅµÄµØÖ·ËùÖ¸ÏòµÄÄÚÈÝ¸³Öµ¸øA
+                      28                             ;SWAP   A;         AµÄ¸ßµÍËÄÎ»½»»»
+                      29                             ;ANL    A, #0F0H;  ½«AµÍËÄÎ»ÇåÁã
+                      30                             ;MOV    R3, A;     R3 <- A, ½«AµÄÖµÔÝ´æ
+                      31                             ;MOV    A, @R0;    ½«R0×°×ÅµÄµØÖ·ËùÖ¸ÏòµÄÄÚÈÝ¸³Öµ¸øA
+                      32                             ;ANL    A, #0FH;   ½«A¸ßËÄÎ»ÇåÁã
+                      33                             ;ORL    A, R3;     ½«AºÍR3Ïà»ò,µÃµ½ºÏ×Ö½á¹û
+                      34                             ;MOVX   @DPTR, A;  ½«½á¹û¸³Öµ¸øÆ¬ÍâRAM
+                      35                             ;INC    R1;        ÊÁÐ1µØÖ·¼ÓÒ»
+                      36                             ;INC    R0;        ÊÁÐ0µØÖ·¼ÓÒ»
+                      37                             ;INC    DPTR;      Æ¬ÍâRAMµØÖ·¼ÓÒ»
+                      38                             ;DJNZ   B, LOOP3;  Ñ­»·¿ØÖÆÌõ¼þ, --B Èô²»Îª0Ôò¼ÌÐøÑ­»·¸³Öµ
+                      39                             ;SJMP   $;         ½áÊøÖ¸Áî
+                      40                             ;END
+*** WARNING #A41 IN 40 (tem5.asm, LINE 40): MISSING 'END' STATEMENT
+A51 MACRO ASSEMBLER  TEM5                                                                 10/26/2023 15:32:01 PAGE     2
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  1 WARNING(S), 0 ERROR(S)

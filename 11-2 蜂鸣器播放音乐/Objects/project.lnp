@@ -1,0 +1,6 @@
+".\Objects\main.obj",
+".\Objects\delay.obj",
+".\Objects\buzzer.obj",
+".\Objects\Timer1_Init.obj" 
+TO ".\Objects\project" 
+PRINT(".\Listings\project.m51") DISABLEWARNING (16) 

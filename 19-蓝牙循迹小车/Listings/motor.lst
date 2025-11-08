@@ -1,0 +1,64 @@
+C51 COMPILER V9.59.0.0   MOTOR                                                             05/21/2023 17:19:32 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE MOTOR
+OBJECT MODULE PLACED IN .\Objects\motor.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE motor.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\mot
+                    -or.lst) OBJECT(.\Objects\motor.obj)
+
+line level    source
+
+   1          #include <REGX51.H>
+   2          
+   3          //00制动
+   4          sbit left1 = P0^7;//10反转
+   5          sbit left2 = P0^6;//01正转
+   6          sbit right1 = P0^5;//10反转
+   7          sbit right2 = P0^4;//01正转
+   8          
+   9          void Left_go()//左轮往前
+  10          {
+  11   1              left1 = 0;
+  12   1              left2 = 1;
+  13   1      }
+  14          void Left_back()//左轮往后
+  15          {
+  16   1              left1 = 1;
+  17   1              left2 = 0;
+  18   1      }
+  19          void Left_stop()//左轮停止
+  20          {
+  21   1              left1 = 0;
+  22   1              left2 = 0;
+  23   1      }
+  24          void Right_go()//右轮往前
+  25          {
+  26   1              right1 = 0;
+  27   1              right2 = 1;
+  28   1      }
+  29          void Right_back()//右轮往后
+  30          {
+  31   1              right1 = 1;
+  32   1              right2 = 0;
+  33   1      }
+  34          void Right_stop()//右轮停止
+  35          {
+  36   1              right1 = 0;
+  37   1              right2 = 0;
+  38   1      }
+  39          
+  40          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     30    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

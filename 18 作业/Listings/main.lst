@@ -1,0 +1,148 @@
+C51 COMPILER V9.59.0.0   MAIN                                                              04/23/2023 11:46:00 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\main
+                    -.lst) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include <REGX51.H>
+   2          #include "Matrixkey.h"
+   3          #include "UART.h"
+   4          #include "nixie.h"
+   5          #include "Timer0_Init.h"
+   6          
+   7          #define LED P2
+   8          unsigned char KeyNum;
+   9          unsigned char a,b,c; 
+  10          
+  11          void main ()
+  12          {
+  13   1              UART_Init();
+  14   1              Timer0_Init();
+  15   1          while(1)
+  16   1              {
+  17   2                      KeyNum=Matrixkey(); 
+  18   2                      if(KeyNum)
+  19   2                      {
+  20   3                              if(KeyNum==1)
+  21   3                              {
+  22   4                                      LED=~0x01;
+  23   4                                      a++;
+  24   4                                      UART_SendByte(0x09);
+  25   4                                      if(a==100)a=0;
+  26   4                              }
+  27   3                              if(KeyNum==2)
+  28   3                              {
+  29   4                                      LED=~0x02;
+  30   4                                      a--;
+  31   4                                      if(a==255)a=99;
+  32   4                              }
+  33   3                  if(KeyNum==3)LED=0x03;
+  34   3                          if(KeyNum==4)LED=0x04;
+  35   3                              if(KeyNum==5)
+  36   3                              {
+  37   4                                      LED=0x05;
+  38   4                                      b++;
+  39   4                                      if(b==100)b=0;
+  40   4                              }
+  41   3                              if(KeyNum==6)
+  42   3                              {
+  43   4                                      LED=0x06;
+  44   4                                      b--;
+  45   4                                      if(b==255)b=99;
+  46   4                              }
+  47   3                              if(KeyNum==7)LED=0x07;
+  48   3                              if(KeyNum==8)LED=0x08;
+  49   3                              if(KeyNum==9)
+  50   3                              {
+  51   4                                      LED=0x09;
+  52   4                                      c++;
+  53   4                                      if(c==100)c=0;
+  54   4                              }
+C51 COMPILER V9.59.0.0   MAIN                                                              04/23/2023 11:46:00 PAGE 2   
+
+  55   3                              if(KeyNum==10)
+  56   3                              {
+  57   4                                      LED=0x0a;
+  58   4                                      c--;
+  59   4                                      if(c==255)c=99;
+  60   4                              }
+  61   3                              if(KeyNum==11)LED=0x0b;
+  62   3                              if(KeyNum==12)LED=0x0c;
+  63   3                              if(KeyNum==13)LED=0x0d;
+  64   3                              if(KeyNum==14)LED=0x0e;
+  65   3                              if(KeyNum==15)LED=0x0f;
+  66   3                              if(KeyNum==16)
+  67   3                              {
+  68   4                                      LED=0x10;
+  69   4                                      a=0;
+  70   4                                      b=0;
+  71   4                                      c=0;
+  72   4                              }                               
+  73   3                      }
+  74   2                      nixie(6,17);
+  75   2                      nixie(3,17);
+  76   2                      nixie(8,a/10);
+  77   2                      nixie(7,a%10);
+  78   2                      nixie(5,b/10);
+  79   2                      nixie(4,b%10);
+  80   2                      nixie(2,c/10);
+  81   2                      nixie(1,c%10);
+  82   2              }
+  83   1      }
+  84          
+  85          
+  86          
+  87          
+  88          void UART_Routine()   interrupt 4 //串口中断对应中断号
+  89          {
+  90   1              if(RI==1)                     //发送和接收中断占用的是一个通道，都会触发中断函数，加if判断防止误触
+  91   1              {
+  92   2                      UART_SendByte(SBUF);
+  93   2                      RI=0;                     //（手动）软件复位
+  94   2              }
+  95   1      }
+  96          
+  97          
+  98          void Timer0_Routine () interrupt 1
+  99          {
+ 100   1              static unsigned int T0count1,T0count2;     //静态局部变量，保证不会被重新赋值
+ 101   1      
+ 102   1              TL0 = 0x66;                                      //确保中断时间不变
+ 103   1              TH0 = 0xFC;     
+ 104   1              T0count1++;
+ 105   1              if(T0count1 == 20)              //每隔20毫秒进入if，灯亮灭变化
+ 106   1              {
+ 107   2                      T0count1=0;
+ 108   2                      Matrixkey_Loop();
+ 109   2              }
+ 110   1              //定时器代替delay，其实质是将按键按下识别和数码管显示这些核心程序放到中断里，主函数负责收尾
+ 111   1              T0count2++;
+ 112   1              if(T0count2 == 5)              //每隔20毫秒进入if，灯亮灭变化
+ 113   1              {
+ 114   2                      T0count1=0;
+ 115   2                       //if(KeyNum==1)LED=0x01;
+ 116   2              }
+C51 COMPILER V9.59.0.0   MAIN                                                              04/23/2023 11:46:00 PAGE 3   
+
+ 117   1      }
+ 118          
+ 119          
+ 120          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    521    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      8    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

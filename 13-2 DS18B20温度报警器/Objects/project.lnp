@@ -1,0 +1,11 @@
+".\Objects\main.obj",
+".\Objects\delay.obj",
+".\Objects\DS18B20.obj",
+".\Objects\LCD1602.obj",
+".\Objects\OneWire.obj",
+".\Objects\AT24C02.obj",
+".\Objects\I2C.obj",
+".\Objects\Key.obj",
+".\Objects\Timer0_Init.obj" 
+TO ".\Objects\project" 
+PRINT(".\Listings\project.m51") DISABLEWARNING (16) 

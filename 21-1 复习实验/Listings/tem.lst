@@ -1,0 +1,52 @@
+A51 MACRO ASSEMBLER  TEM                                                                  10/31/2023 15:22:08 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.2.7.0
+OBJECT MODULE PLACED IN .\Objects\tem.obj
+ASSEMBLER INVOKED BY: D:\Keil_v5\C51\BIN\A51.EXE tem.asm SET(SMALL) DEBUG PRINT(.\Listings\tem.lst) OBJECT(.\Objects\tem
+                      .obj) EP
+
+LOC  OBJ            LINE     SOURCE
+
+                       1                     ;ORG    0000H
+                       2                     ;LJMP   MAIN
+                       3                     ;ORG    0003H
+                       4                     ;AJMP   PINT0
+                       5                     ;ORG    0040H
+                       6     ;MAIN:   ;程序一：汇编实现外部中断单键控制单LED
+                       7                     ;SETB   PX0;   优先级
+                       8                     ;SETB   IT0;   触发方式
+                       9                     ;SETB   EX0;   允许INT0
+                      10                     ;SETB   EA;    总允许  
+                      11                 ;SJMP   $
+                      12                 
+                      13                             
+                      14     ;PINT0:  ACALL  DELAY; 调用延时子程序 
+                      15                     ;CPL    P0.1;  触发中断，点灯 
+                      16                     ;RETI;         返回子程序
+                      17                     
+                      18     ;;延时子程序，可随时调用该模块
+                      19     ;DELAY:  MOV    R4, #249
+                      20     ;D1:     NOP
+                      21                     ;NOP
+                      22                     ;DJNZ   R4,D1
+                      23                     ;NOP
+                      24                     ;RET
+                      25                     
+                      26                     ;END
+                      27                             
+*** WARNING #A41 IN 27 (tem.asm, LINE 27): MISSING 'END' STATEMENT
+A51 MACRO ASSEMBLER  TEM                                                                  10/31/2023 15:22:08 PAGE     2
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  1 WARNING(S), 0 ERROR(S)

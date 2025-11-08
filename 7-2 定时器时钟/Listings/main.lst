@@ -1,0 +1,240 @@
+C51 COMPILER V9.59.0.0   MAIN                                                              01/08/2025 21:30:01 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\main
+                    -.lst) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          //#include <REGX51.H>
+   2          //#include <LCD1602.h>
+   3          //#include <Timer0_Init.h>
+   4          
+   5          //unsigned char sec=52,min=59,hour=23;  //ʱ����
+   6          //void main()
+   7          //{
+   8          //      Timer0_Init();           //��������
+   9          //      LCD_Init();
+  10          //      while(1)
+  11          //      {
+  12          //              LCD_ShowString(1,1,"Clock:");
+  13          //              LCD_ShowNum(2,1,hour,2);
+  14          //              LCD_ShowChar(2,3,':');
+  15          //              LCD_ShowNum(2,4,min,2);
+  16          //              LCD_ShowChar(2,6,':');
+  17          //              LCD_ShowNum(2,7,sec,2);
+  18          //      }
+  19          //      
+  20          //}
+  21          
+  22          //void Timer0_Routine () interrupt 1   //�ж�ִ�к���ʱ��Ҫ��϶̣�����̫��
+  23          //{
+  24          //      static unsigned int T0count;     //��̬�ֲ���������֤���ᱻ���¸�ֵ
+  25          
+  26          //      TL0 = 0x66;                                      //ȷ���ж�ʱ�䲻��
+  27          //      TH0 = 0xFC;     
+  28          //      T0count++;
+  29          //      
+  30          //      if(T0count == 1000)              //ÿ��1000���룬������仯
+  31          //      {
+  32          //              T0count=0;                   
+  33          //              sec++;
+  34          //              if(sec==60)                  //��60��һ
+  35          //              {
+  36          //                      sec=0;
+  37          //                      min++;
+  38          //                      if(min==60)
+  39          //                      {
+  40          //                              min=0;
+  41          //                              hour++;
+  42          //                              if(hour==24)
+  43          //                              {
+  44          //                                      hour=0;
+  45          //                              }
+  46          //                      }
+  47          //              }               
+  48          //      }
+  49          //}
+  50          
+  51          #include <REGX51.H>
+  52          #include<intrins.h>
+  53          #define uint unsigned int
+  54          #define uchar unsigned char
+C51 COMPILER V9.59.0.0   MAIN                                                              01/08/2025 21:30:01 PAGE 2   
+
+  55                  
+  56          void delay(uchar z);    //函数声明
+  57          
+  58          void Timer0Init();     //函数声明
+  59          //----------------------------------------------------------------------
+  60          sbit RedLED=P1^0;     // 定义绿灯的I/O口
+  61          
+  62          sbit GreenLED=P1^1;   // 定义红灯的I/O口 
+  63          
+  64          sbit Key=P3^4;       // 定义按键的I/O口
+  65          
+  66          typedef enum
+  67          {
+  68                  Key_Check,
+  69                  Key_Press,
+  70                  Key_Release,
+  71                  Key_Over,
+  72          }Key_State;
+  73          
+  74          Key_State keyState = Key_Check;//给按键状态设置初始值
+  75          
+  76          unsigned char keyPressCount = 0; // 定义全局变量记录按键按下次数
+  77          
+  78          unsigned int keyPressTime = 20; // 定义全局变量记录按键按下时间
+  79          
+  80          int KeyStartTime;
+  81          
+  82          void Key_Scan(void);
+  83          //----------------------------------------------------------------------
+  84          
+  85          void main()
+  86          {
+  87   1          // 初始状态：红灯亮、绿灯灭
+  88   1          RedLED=0;                 
+  89   1              GreenLED=1;               
+  90   1          
+  91   1          Timer0Init();             // 初始化定时器0
+  92   1      
+  93   1          while(1)    
+  94   1              {        
+  95   2              if(keyState == Key_Over)      //只有松手后，即按压时间记录结束，该标志位才会
+             -置一，即为松手执行功能，带长按时间检测
+  96   2                  {
+  97   3                          keyState = Key_Check;     //保证以下程序只在刚按下时执行一次
+  98   3                  
+  99   3                  keyPressTime = 20;        //按压时间“清零”，方便下次按压时计时
+ 100   3                  }
+ 101   2      
+ 102   2              if(keyState == Key_Release)
+ 103   2              {
+ 104   3                  if(keyPressTime >= 2000)  // 长按超过2秒
+ 105   3                  {   
+ 106   4                      keyPressCount = 0;
+ 107   4                      RedLED = 0;           // 复位初值，红灯亮，绿灯灭
+ 108   4                      GreenLED = 1;                           
+ 109   4                  }
+ 110   3                  else
+ 111   3                  {
+ 112   4                      if(keyPressCount==1)  // 根据按键按下次数控制灯的亮灭                             
+ 113   4                      {
+ 114   5                          RedLED = 1;
+ 115   5                          GreenLED = 0;
+C51 COMPILER V9.59.0.0   MAIN                                                              01/08/2025 21:30:01 PAGE 3   
+
+ 116   5                      } 
+ 117   4                      else if(keyPressCount==2)
+ 118   4                      {
+ 119   5                          RedLED = 0;
+ 120   5                          GreenLED = 0;
+ 121   5                      } 
+ 122   4                      else if(keyPressCount==3)// 按键第三次按下
+ 123   4                      {
+ 124   5                          RedLED = 0;          // 复位初值，红灯亮，绿灯灭
+ 125   5                          GreenLED = 1;                                                                                                               
+ 126   5                      }
+ 127   4                  }
+ 128   3              }
+ 129   2              }
+ 130   1      }
+ 131          
+ 132          void Timer0_ISR() interrupt 1    // 定时器0中断服务函数
+ 133          { 
+ 134   1          // TH0 = (65536-50000)/256;   // 设置定时器0的初始值，定时50ms
+ 135   1          // TL0 = (65536-50000)%256; 
+ 136   1      
+ 137   1          // 每隔1毫秒中断一次
+ 138   1          TL0 = 0x66;                                  
+ 139   1              TH0 = 0xFC;            
+ 140   1      
+ 141   1              if(++ KeyStartTime == 10)//每隔10ms满足条件，扫描按键
+ 142   1              {
+ 143   2                      KeyStartTime = 0;
+ 144   2                      Key_Scan();
+ 145   2              }
+ 146   1      }
+ 147          
+ 148          void Key_Scan(void)
+ 149          {
+ 150   1              switch(keyState)
+ 151   1              {
+ 152   2                      case Key_Check://平常状态
+ 153   2                      {
+ 154   3                              if(Key == 0)
+ 155   3                              {
+ 156   4                                      keyState = Key_Press;//在检测状态下，检测是否有按键按下，如果有，转换为按下�
+             -��态
+ 157   4                              }
+ 158   3                      };
+ 159   2                      break;
+ 160   2                      case Key_Press://在按下状态下，判断具体是哪个按键按下，给予键值
+ 161   2                      {
+ 162   3                              keyPressCount ++;
+ 163   3                  keyPressCount %= 4;
+ 164   3      
+ 165   3                              keyState = Key_Release;//不管松没松手，直接进入“松手”状态
+ 166   3                      };
+ 167   2                      break;
+ 168   2                      case Key_Release://在“松手”状态下，判断是否真的松手
+ 169   2                      {
+ 170   3                              if(Key == 0)
+ 171   3                              {
+ 172   4                                      keyPressTime += 10;//过了10ms，发现还没松手，按压时间+10
+ 173   4                              }
+ 174   3                              else//真的松手了，判断为短按
+ 175   3                              {
+ 176   4                                      keyState = Key_Over;//此时为按下后松手的状态
+C51 COMPILER V9.59.0.0   MAIN                                                              01/08/2025 21:30:01 PAGE 4   
+
+ 177   4                              }
+ 178   3                      };
+ 179   2                      break;
+ 180   2                      default:break;
+ 181   2              }
+ 182   1      }
+ 183          
+ 184          void Timer0Init()     // 定时器0函数  以主频12M
+ 185          {
+ 186   1          
+ 187   1          TMOD&=0xF0;                        //TMOD清0
+ 188   1          TMOD|=0x01;                       // 设置定时器0为工作方式1（16位定时器）
+ 189   1          TH0=(65536-50000)/256;           // 设置定时器0的初始值，定时50ms
+ 190   1          TL0=(65536-50000)%256;      
+ 191   1          TR0=1;                          // 开启定时器0    
+ 192   1          ET0=1;                         // 允许定时器0中断   
+ 193   1          EA=1;                         // 开启总中断
+ 194   1      
+ 195   1      }
+ 196          
+ 197          void delay(uchar z)       //按键延时消抖
+ 198          {
+ 199   1              uchar x,y;
+ 200   1              for(x=z;x>0;x--)
+ 201   1                      for(y=110;y>0;y--);
+ 202   1      }
+ 203          
+ 204          
+ 205          
+ 206          
+ 207          
+ 208          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    263    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      6    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

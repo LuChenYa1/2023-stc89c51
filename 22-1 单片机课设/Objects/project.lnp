@@ -1,0 +1,12 @@
+".\Objects\main.obj",
+".\Objects\delay.obj",
+".\Objects\UART.obj",
+".\Objects\Servo.obj",
+".\Objects\Timer0_Init.obj",
+".\Objects\Matrixkey.obj",
+".\Objects\XPT2046.obj",
+".\Objects\AT24C02.obj",
+".\Objects\I2C.obj",
+".\Objects\OLED.obj" 
+TO ".\Objects\project" 
+PRINT(".\Listings\project.m51") DISABLEWARNING (16) 

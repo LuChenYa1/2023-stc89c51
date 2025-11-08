@@ -1,0 +1,123 @@
+C51 COMPILER V9.59.0.0   ONEWIRE                                                           04/11/2023 21:20:53 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE ONEWIRE
+OBJECT MODULE PLACED IN .\Objects\OneWire.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE OneWire.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\O
+                    -neWire.lst) OBJECT(.\Objects\OneWire.obj)
+
+line level    source
+
+   1          #include <REGX51.H>
+   2          #include <INTRINS.H>
+   3          
+   4          unsigned char ACKBit;
+   5          sbit OneWire_DQ = P3^7;
+   6          
+   7          
+   8          /**
+   9            * @brief  初始化，开始执行读写操作
+  10            * @param  无
+  11            * @retval 0应答，1非应答
+  12            */
+  13          unsigned char OneWire_Init(void)
+  14          {
+  15   1              unsigned char ACKBit;
+  16   1              unsigned char i;
+  17   1              OneWire_DQ=1;
+  18   1              OneWire_DQ=0;
+  19   1              i = 227;while (--i);//延时500us：主线拉低至少480us
+  20   1              OneWire_DQ=1;       //释放置一
+  21   1              i = 30;while (--i); //延时70us：置一等待15~60us后，从机才会响应，为确保从机在置一时响应，延时比60长
+  22   1              ACKBit=OneWire_DQ;
+  23   1              i = 227;while (--i);//延时500us:保证时长
+  24   1              return ACKBit;
+  25   1      }
+  26          
+  27          
+  28          /**
+  29            * @brief  主机向从机发送一位
+  30            * @param  Bit，要发送的位的值（0/1）
+  31            * @retval 无
+  32            */
+  33          void OneWire_SendBit(unsigned char Bit)
+  34          {
+  35   1              unsigned char i;
+  36   1              OneWire_DQ=0;               //拉低
+  37   1              _nop_();i = 4;while (--i);  //延时10us,去掉函数头调用的4us，设定14us，实际运行10us
+  38   1              OneWire_DQ=Bit;             //将要输入的值写进去
+  39   1              i = 23;while (--i);         //延时50us
+  40   1              OneWire_DQ=1;               //释放
+  41   1      }
+  42          
+  43          
+  44          /**
+  45            * @brief  主机接收从机发来的一位的值
+  46            * @param  无
+  47            * @retval 返回一位的值
+  48            */
+  49          unsigned char OneWire_ReceiveBit(void)
+  50          {
+  51   1              unsigned char Bit,i;
+  52   1              OneWire_DQ=0;              //拉低
+  53   1              _nop_();i = 1;while (--i); //延时5us
+  54   1              OneWire_DQ=1;               //释放
+C51 COMPILER V9.59.0.0   ONEWIRE                                                           04/11/2023 21:20:53 PAGE 2   
+
+  55   1          _nop_();i = 1;while (--i); //延时5us
+  56   1              Bit=OneWire_DQ;            //查看从机发送过来的值
+  57   1              i = 23;while (--i);        //延时50us
+  58   1              //主机不释放，由从机负责释放
+  59   1              return Bit;
+  60   1      }
+  61          
+  62          /**
+  63            * @brief  主机发送一个字节
+  64            * @param  Byte，要发送的字节的值
+  65            * @retval 无
+  66            */
+  67          void OneWire_SendByte(unsigned char Byte)
+  68          {
+  69   1              unsigned char j;
+  70   1              for(j=0;j<8;j++)
+  71   1              {
+  72   2                      OneWire_SendBit(Byte&(0x01<<j));
+  73   2              }
+  74   1      }
+  75          
+  76          
+  77          /**
+  78            * @brief  主机接收一个字节
+  79            * @param  无
+  80            * @retval 返回接收的字节的值
+  81            */
+  82          unsigned char OneWire_ReceiveByte(void)
+  83          {
+  84   1              unsigned char j;
+  85   1              unsigned char Byte=0x00;
+  86   1              for(j=0;j<8;j++)
+  87   1              {
+  88   2                      if(OneWire_ReceiveBit()){Byte|=(0x01<<j);}
+  89   2              }
+  90   1              return Byte;
+  91   1      }
+  92          
+  93          
+  94          
+  95          
+  96          
+  97          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    143    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      1    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

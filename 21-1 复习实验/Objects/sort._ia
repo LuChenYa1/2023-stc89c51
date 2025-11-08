@@ -1,0 +1,1 @@
+"sort.asm" SET (SMALL) DEBUG PRINT(.\Listings\sort.lst) OBJECT(.\Objects\sort.obj) EP

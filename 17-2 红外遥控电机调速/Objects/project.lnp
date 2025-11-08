@@ -1,0 +1,11 @@
+".\Objects\main.obj",
+".\Objects\delay.obj",
+".\Objects\Key.obj",
+".\Objects\nixie.obj",
+".\Objects\Timer1_Init.obj",
+".\Objects\Int0.obj",
+".\Objects\Timer0_Init.obj",
+".\Objects\Motor.obj",
+".\Objects\IR.obj" 
+TO ".\Objects\project" 
+PRINT(".\Listings\project.m51") DISABLEWARNING (16) 

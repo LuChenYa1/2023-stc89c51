@@ -1,0 +1,121 @@
+C51 COMPILER V9.59.0.0   MAIN_WORK                                                         11/04/2023 21:16:37 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE MAIN_WORK
+OBJECT MODULE PLACED IN .\Objects\main_work.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE main_work.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings
+                    -\main_work.lst) OBJECT(.\Objects\main_work.obj)
+
+line level    source
+
+   1          #include <REGF51RC.H>
+   2          #include "Timer0_Init.h"
+   3          #include "nixie.h"
+   4          #include "Key.h"
+   5          
+   6          typedef unsigned char uint8_t;
+   7          #define  FirstTimeSet0  if(NewMode != OldMode)Time_24 = 0  //¸Õ¸ÕÖØÐÂ°´ÏÂ¸Ã°´¼üÊ±£¬¶ÔÊ±¼äÖØÐÂ¸³Öµ£¬Á¬Ðø°´Ï
+             -ÂÊ±²»ÔÙ±ä»¯
+   8          
+   9          uint8_t Time_24 = 0;
+  10          uint8_t KeyNum, Mode, NewMode, OldMode, Flag_0;
+  11          unsigned char Set_Mode(void);
+  12          void Get_Mode(void);
+  13          void Show_Time(uint8_t time);
+  14          
+  15          void main()
+  16          {
+  17   1              Timer0_Init();
+  18   1              while(1)
+  19   1              {
+  20   2                      Get_Mode();
+  21   2                      if(Mode == 1)//Ë³¼ÆÊ±
+  22   2                      {
+  23   3                              Show_Time(Time_24);
+  24   3                              Flag_0 = 1;
+  25   3                      }
+  26   2                      else if(Mode == 2)//µ¹¼ÆÊ±
+  27   2                      {
+  28   3                              if(NewMode != OldMode)Time_24 = 24 - Time_24;
+  29   3                              Show_Time(24 - Time_24);
+  30   3                              Flag_0 = 1;
+  31   3                      }
+  32   2                      else if(Mode == 3)//¹éÁãÇÒÔÝÍ£
+  33   2                      {
+  34   3                              FirstTimeSet0;
+  35   3                              Flag_0 = 0;
+  36   3                              Show_Time(Time_24);
+  37   3                      }
+  38   2                      else if(Mode == 4)//»Ø±í24ÇÒÔÝÍ£
+  39   2                      {
+  40   3                              FirstTimeSet0;
+  41   3                              Flag_0 = 0;
+  42   3                              Show_Time(24 - Time_24);
+  43   3                      }
+  44   2              }
+  45   1      }
+  46          
+  47          
+  48          //¶¨Ê±ÖÐ¶Ïº¯Êý
+  49          void Timer0_Routine () interrupt 1
+  50          {
+  51   1              static unsigned int T0count;     //¾²Ì¬¾Ö²¿±äÁ¿£¬±£Ö¤²»»á±»ÖØÐÂ¸³Öµ
+  52   1      
+  53   1              TL0 = 0x66;                                      //È·±£ÖÐ¶ÏÊ±¼ä²»±ä
+C51 COMPILER V9.59.0.0   MAIN_WORK                                                         11/04/2023 21:16:37 PAGE 2   
+
+  54   1              TH0 = 0xFC;     
+  55   1              T0count++;
+  56   1              Key_Loop();
+  57   1              
+  58   1              if(T0count == 1000)              //Ã¿¸ô1Ãë½øÈëif£¬µÆÁÁÃð±ä»¯
+  59   1              {
+  60   2                      T0count = 0;
+  61   2                      if(Flag_0 == 1)              //ÆôÍ£
+  62   2                      {
+  63   3                              Time_24 ++;                              //Ê±¼äÒ»Ö±´Ó0Ôö¼Óµ½24£¬Ñ­»·¸Ã¹ý³Ì
+  64   3                              Time_24 %= 25; 
+  65   3                      }
+  66   2              }
+  67   1      }
+  68          
+  69          
+  70          //É¨ÃèµÃµ½ÐÂÀÏÄ£Ê½Öµ
+  71          void Get_Mode (void)
+  72          {
+  73   1              OldMode = Mode;
+  74   1              NewMode = Set_Mode();
+  75   1      }
+  76          
+  77          
+  78          //¸ù¾Ý°´¼üÉèÖÃÄ£Ê½
+  79          unsigned char Set_Mode(void)
+  80          {
+  81   1              KeyNum = Key();
+  82   1              if(KeyNum == 1)Mode = 1;      //°´¼ü°´ÏÂ¼´×ª»»Ä£Ê½
+  83   1              else if(KeyNum == 2)Mode = 2;
+  84   1              else if(KeyNum == 3)Mode = 3;
+  85   1              else if(KeyNum == 4)Mode = 4;
+  86   1              return Mode;
+  87   1      }
+  88          
+  89          //ÏÔÊ¾º¯Êý
+  90          void Show_Time(uint8_t time)
+  91          {
+  92   1              nixie(1, time / 10);
+  93   1              nixie(2, time % 10);
+  94   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    301    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      8       1
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

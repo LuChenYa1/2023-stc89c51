@@ -1,0 +1,57 @@
+C51 COMPILER V9.59.0.0   CHAOSHENGBO                                                       05/28/2023 15:51:01 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE CHAOSHENGBO
+OBJECT MODULE PLACED IN .\Objects\chaoshengbo.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE chaoshengbo.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listin
+                    -gs\chaoshengbo.lst) OBJECT(.\Objects\chaoshengbo.obj)
+
+line level    source
+
+   1          #include <REGX51.H>
+   2          #include "delay.h"
+   3          
+   4          
+   5          sbit Trig = P1^7;
+   6          sbit Echo = P1^6;
+   7          
+   8          unsigned char Actualdistance,Targetdistance = 20;
+   9          void chaoshengbo ()//@11.0592MHz
+  10          {
+  11   1              T2MOD = 0;              //初始化定时器2 
+*** ERROR C202 IN LINE 11 OF chaoshengbo.c: 'T2MOD': undefined identifier
+  12   1              T2CON = 0;               
+*** ERROR C202 IN LINE 12 OF chaoshengbo.c: 'T2CON': undefined identifier
+  13   1              TL2 = 0;                 //设置定时初值，便于计数
+*** ERROR C202 IN LINE 13 OF chaoshengbo.c: 'TL2': undefined identifier
+  14   1              TH2 = 0;                 
+*** ERROR C202 IN LINE 14 OF chaoshengbo.c: 'TH2': undefined identifier
+  15   1              RCAP2L = 0;              //设置定时重载值
+*** ERROR C202 IN LINE 15 OF chaoshengbo.c: 'RCAP2L': undefined identifier
+  16   1              RCAP2H = 0;     
+*** ERROR C202 IN LINE 16 OF chaoshengbo.c: 'RCAP2H': undefined identifier
+  17   1      
+  18   1              Trig = 1;        //发出脉冲
+  19   1              delay20us();     //持续20us
+  20   1              Trig = 0;
+  21   1              
+  22   1              while(!Echo);    //接收返回脉冲
+  23   1              TR2 = 1;         //开始计数
+*** ERROR C202 IN LINE 23 OF chaoshengbo.c: 'TR2': undefined identifier
+  24   1              while(Echo);     //返回脉冲结束
+  25   1              TR2 = 0;                 //停止计数
+*** ERROR C202 IN LINE 25 OF chaoshengbo.c: 'TR2': undefined identifier
+  26   1              
+  27   1              Actualdistance = ((TH2*256+TL2)*0.034/2)+1;//单位cm
+*** ERROR C202 IN LINE 27 OF chaoshengbo.c: 'TH2': undefined identifier
+  28   1              if(Actualdistance <= Targetdistance)
+  29   1              {
+  30   2                      car_Stop();
+  31   2                      delay(1000);
+  32   2              }
+  33   1      }
+  34          
+  35          
+  36          
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  9 ERROR(S)
